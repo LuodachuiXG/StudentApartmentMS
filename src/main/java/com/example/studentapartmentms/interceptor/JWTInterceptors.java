@@ -50,7 +50,7 @@ public class JWTInterceptors implements HandlerInterceptor {
             errMsg = "Token 算法不一致";
         } catch (Exception e) {
             log.info(e.getMessage());
-            errMsg = "你无权访问受保护资源";
+            errMsg = "无权访问受保护资源";
         }
         // 抛出 JWT 验证异常，携带异常信息
         throw new JWTVerificationException(errMsg);

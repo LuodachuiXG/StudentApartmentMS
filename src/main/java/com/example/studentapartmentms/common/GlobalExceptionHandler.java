@@ -2,6 +2,7 @@ package com.example.studentapartmentms.common;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.studentapartmentms.pojo.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +69,6 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         apiResponse.setErrMsg("服务器内部错误");
         apiResponse.setData(null);
-
         return ResponseEntity.status(500).body(apiResponse);
     }
 }
