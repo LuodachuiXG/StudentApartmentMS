@@ -140,6 +140,7 @@ public class UserServiceImpl implements UserService {
         LambdaUpdateWrapper<User> uw = new LambdaUpdateWrapper<>();
         uw.eq(User::getUserId, userId)
                 .set(User::getLastLogin, LocalDateTime.now());
+        userMapper.update(uw);
     }
 
     /**
@@ -168,6 +169,7 @@ public class UserServiceImpl implements UserService {
 
         // 修改用户最后登录时间
         updateLastLogin(user.getUserId());
+        user.setLastLogin(LocalDateTime.now());
 
         // 将 user 实体类转为 JSON 对象
         JSONObject json = JSONObject.from(JSON.toJSON(user));
