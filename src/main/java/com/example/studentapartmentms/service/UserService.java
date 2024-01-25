@@ -1,8 +1,8 @@
 package com.example.studentapartmentms.service;
 
-import com.alibaba.fastjson2.JSONObject;
-import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,18 +15,10 @@ public interface UserService {
 
     /**
      * 添加用户
-     * @param name 姓名
-     * @param id 工号或学号
-     * @param password 密码
-     * @param role 角色
-     * @param phone 手机
-     * @param gender 性别
-     * @param birth 生日
+     * @param user 用户实体类
      * @return 注册成功返回用户信息，否则返回 null
      */
-    User addUser(String name, String id, String password,
-                 RoleEnum role, String phone,
-                 String gender, LocalDate birth);
+    User addUser(User user);
 
     /**
      * 获取所有用户
@@ -59,6 +51,6 @@ public interface UserService {
      * @param password 密码
      * @return 登录成功返回 JSON 对象，封装了用户信息和 Token
      */
-    JSONObject login(String id, String password);
+    ObjectNode login(String id, String password);
 
 }

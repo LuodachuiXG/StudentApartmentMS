@@ -1,19 +1,15 @@
 package com.example.studentapartmentms.controller;
 
 
-import com.alibaba.fastjson2.JSONObject;
 import com.example.studentapartmentms.common.MyException;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import com.example.studentapartmentms.service.UserService;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import java.time.LocalDate;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
@@ -28,31 +24,22 @@ public class UserController {
 
     /**
      * 用户登录
-     * @param id 工号或学号
-     * @param password 密码
+     * @param user 用户实体类
      * @return 登录成功返回用户信息和 Token
      */
     @PostMapping("/login")
-    public JSONObject login(String id, String password) {
-        return userService.login(id, password);
+    public ObjectNode login(@RequestBody User user) {
+        return userService.login(user.getId(), user.getPassword());
     }
 
     /**
      * 用户注册（此接口只能用于管理员注册）
-     * @param name 姓名
-     * @param id 工号
-     * @param password 密码
-     * @param phone 手机号
-     * @param gender 性别
-     * @param birth 生日
+     * @param user 用户实体类
      * @return 注册成功返回用户信息，否则返回 null
      */
     @PostMapping
-    public User addUser(String name, String id,
-                        String password, String phone,
-                        String gender, LocalDate birth
-    ) {
-        return userService.addUser(name, id, password, RoleEnum.ADMIN, phone, gender, birth);
+    public User addUser(@RequestBody User user) {
+        return userService.addUser(user);
     }
 
     /**

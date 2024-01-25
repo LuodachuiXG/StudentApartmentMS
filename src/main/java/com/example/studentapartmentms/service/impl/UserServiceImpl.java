@@ -1,21 +1,20 @@
 package com.example.studentapartmentms.service.impl;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
+
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.studentapartmentms.common.JWTUtils;
 import com.example.studentapartmentms.common.MD5Utils;
 import com.example.studentapartmentms.common.MyException;
 import com.example.studentapartmentms.common.Utils;
 import com.example.studentapartmentms.mapper.UserMapper;
-import com.example.studentapartmentms.pojo.GenderEnum;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import com.example.studentapartmentms.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -35,38 +34,19 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 添加用户
-     * @param name 姓名
-     * @param id 工号或学号
-     * @param password 密码
-     * @param role 角色
-     * @param phone 手机
-     * @param gender 性别
-     * @param birth 生日
+     * @param user 用户实体类
      * @return 注册成功返回用户信息，否则返回 null
      */
     @Override
-    public User addUser(String name, String id, String password,
-                        RoleEnum role, String phone,
-                        String gender, LocalDate birth
+    public User addUser(User user
     ) {
-        // 封装用户实体类
-        User user = new User();
-        user.setName(name);
-        user.setId(id);
-        user.setPassword(MD5Utils.getMd5Hash(password));
-        user.setRole(role);
-        user.setPhone(phone);
-        if (gender.equals("male")) {
-            user.setGender(GenderEnum.MALE);
-        } else if (gender.equals("female")) {
-            user.setGender(GenderEnum.FEMALE);
-        } else {
+        user.setRole(RoleEnum.ADMIN);
+        if (user.getGender() == null) {
             throw new MyException("gender 只能为 male 或 female");
         }
-        user.setBirth(birth);
 
         // 首先检查工号（学号）是否已经存在
-        User u = userById(id);
+        User u = userById(user.getId());
         if (u != null) {
             // 工号（学号）已经存在
             throw new MyException("工号（学号）已经存在");
@@ -150,7 +130,7 @@ public class UserServiceImpl implements UserService {
      * @return 登录成功返回 JSON 对象，封装了用户信息和 Token
      */
     @Override
-    public JSONObject login(String id, String password) {
+    public ObjectNode login(String id, String password) {
         // 根据用户 ID 获取用户
         User user = userById(id);
         if (user == null) {
@@ -172,7 +152,8 @@ public class UserServiceImpl implements UserService {
         user.setLastLogin(LocalDateTime.now());
 
         // 将 user 实体类转为 JSON 对象
-        JSONObject json = JSONObject.from(JSON.toJSON(user));
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode json = mapper.valueToTree(user);
         // 去处用户敏感数据
         json.remove("password");
         json.put("token", token);

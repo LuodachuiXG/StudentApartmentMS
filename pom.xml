@@ -22,11 +22,6 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -88,14 +83,14 @@
 			<version>4.4.0</version>
 		</dependency>
 
-
-		<!-- FastJson 依赖 -->
-		<!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
+		<!-- Jackson 对 Java 事件类序列化依赖 -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
 		<dependency>
-			<groupId>com.alibaba.fastjson2</groupId>
-			<artifactId>fastjson2</artifactId>
-			<version>2.0.45</version>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.15.3</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
