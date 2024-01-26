@@ -12,13 +12,10 @@ import com.example.studentapartmentms.mapper.UserMapper;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import com.example.studentapartmentms.service.UserService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +27,7 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
 
     @Resource
-    private UserMapper userMapper;
+    private UserMapper mapper;
 
     /**
      * 添加用户
@@ -54,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(MD5Utils.getMd5Hash(user.getPassword()));
         // 加入用户
-        int result = userMapper.insert(user);
+        int result = mapper.insert(user);
         if (result == 1) {
             // 注册成功，返回用户信息，但是抹去密码
             user.setPassword(null);
@@ -70,7 +67,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> allUser() {
-        List<User> users = userMapper.selectList(null);
+        List<User> users = mapper.selectList(null);
         // 清除用户敏感信息
         users.forEach((user -> user.setPassword(null)));
         return users;
@@ -93,7 +90,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 根据 userId 获取用户
-        User user = userMapper.selectById(userId);
+        User user = mapper.selectById(userId);
         if (user == null) {
             // userId 有问题
             throw new JWTVerificationException("Token 异常");
@@ -109,7 +106,7 @@ public class UserServiceImpl implements UserService {
     public User userById(String id) {
         LambdaQueryWrapper<User> qw = new LambdaQueryWrapper<>();
         qw.eq(User::getId, id);
-        return userMapper.selectOne(qw);
+        return mapper.selectOne(qw);
     }
 
     /**
@@ -121,7 +118,7 @@ public class UserServiceImpl implements UserService {
         LambdaUpdateWrapper<User> uw = new LambdaUpdateWrapper<>();
         uw.eq(User::getUserId, userId)
                 .set(User::getLastLogin, LocalDateTime.now());
-        userMapper.update(uw);
+        mapper.update(uw);
     }
 
     /**
