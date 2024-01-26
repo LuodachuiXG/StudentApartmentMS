@@ -26,8 +26,8 @@ public class JWTInterceptors implements HandlerInterceptor {
         String requestUrl = request.getRequestURI();
         // 获取请求方法
         String requestMethod = request.getMethod();
-
-        if (requestMethod.equals("POST") && requestUrl.equals("/user")) {
+        if ((requestMethod.equals("POST") || requestMethod.equals("OPTIONS")) &&
+                requestUrl.equals("/user")) {
             // 注册用户接口，放行
             return true;
         }

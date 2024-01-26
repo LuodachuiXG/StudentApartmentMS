@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
             throw new MyException("工号（学号）已经存在");
         }
 
+        user.setPassword(MD5Utils.getMd5Hash(user.getPassword()));
         // 加入用户
         int result = userMapper.insert(user);
         if (result == 1) {
