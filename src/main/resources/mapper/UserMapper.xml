@@ -46,9 +46,9 @@
         WHERE userId = #{userId}
     </update>
 
-    <delete id="deleteByUserId">
+    <delete id="deleteByUserIds">
         DELETE
         FROM user
-        WHERE userId = #{userId}
+        WHERE userId IN #{userIds}
     </delete>
 </mapper>

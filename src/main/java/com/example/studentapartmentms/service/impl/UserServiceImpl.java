@@ -67,6 +67,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 删除用户
+     * @param userIds 用户 ID 集合
+     * @return 删除成功返回 true
+     */
+    @Override
+    public Boolean deleteUser(List<Integer> userIds) {
+        int result = userMapper.deleteByUserIds(userIds);
+        return result > 0;
+    }
+
+    /**
      * 获取所有用户
      *
      * @return 用户集合

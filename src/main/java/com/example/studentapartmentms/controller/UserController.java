@@ -9,14 +9,17 @@ import com.example.studentapartmentms.service.UserService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/user")
 @ResponseBody
+@Slf4j
 public class UserController {
 
 
@@ -34,6 +37,7 @@ public class UserController {
      */
     @PostMapping("/login")
     public ObjectNode login(@RequestBody User user) {
+        log.info("LOGIN: " + user.getId());
         return userService.login(user.getId(), user.getPassword());
     }
 
@@ -45,7 +49,20 @@ public class UserController {
      */
     @PostMapping
     public User addUser(@RequestBody User user) {
+        log.info("REGISTER: " + user.getId());
         return userService.addUser(user);
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param userIds 用户 ID 集合
+     * @return 删除成功返回 true
+     */
+    @PostMapping
+    public boolean deleteUser(@RequestParam("userIds") List<Integer> userIds) {
+        log.info("DELETE_USER: " + userIds.toString());
+        return userService.deleteUser(userIds);
     }
 
     /**

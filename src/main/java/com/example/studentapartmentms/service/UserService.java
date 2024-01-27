@@ -21,6 +21,14 @@ public interface UserService {
      */
     User addUser(User user);
 
+
+    /**
+     * 删除用户
+     * @param userIds 用户 ID 集合
+     * @return 删除成功返回 true
+     */
+    Boolean deleteUser(List<Integer> userIds);
+
     /**
      * 获取所有用户
      * @return 用户集合

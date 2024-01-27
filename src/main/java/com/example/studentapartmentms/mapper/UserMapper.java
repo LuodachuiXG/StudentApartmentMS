@@ -45,7 +45,7 @@ public interface UserMapper {
 
     /**
      * 根据用户 ID 删除用户
-     * @param userId 用户 ID
+     * @param userIds 用户 ID 集合
      */
-    int deleteByUserId(@Param("userId") Integer userId);
+    int deleteByUserIds(@Param("userIds") List<Integer> userIds);
 }
