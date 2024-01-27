@@ -7,14 +7,18 @@ import com.example.studentapartmentms.common.MD5Utils;
 import com.example.studentapartmentms.common.MyException;
 import com.example.studentapartmentms.common.Utils;
 import com.example.studentapartmentms.mapper.UserMapper;
+import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import com.example.studentapartmentms.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 添加用户
+     *
      * @param user 用户实体类
      * @return 注册成功返回用户信息，否则返回 null
      */
@@ -63,6 +68,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 获取所有用户
+     *
      * @return 用户集合
      */
     @Override
@@ -72,6 +78,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据 Token 获取用户
+     *
      * @param token 指定 Token
      * @return 用户存在则返回，不存在抛出 JWT 验证异常
      */
@@ -97,6 +104,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据 ID 获取用户
+     *
      * @param id 工号或学号
      */
     @Override
@@ -105,7 +113,34 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 分页获取用户
+     *
+     * @param page 当前页
+     * @param size 每页数据大小
+     */
+    @Override
+    public Pager<User> userByPage(Integer page, Integer size) {
+        // 开始分页查询，执行此代码之后的 SQL 会被自动加上分页的代码
+        PageHelper.startPage(page, size);
+        // 此处的获取所有用户的 SQL 已经被加上了分页代码
+        List<User> list = allUser();
+        PageInfo<User> pageInfo = new PageInfo<>(list);
+        // 获取用户总数
+        long totalUser = pageInfo.getTotal();
+        // 获取总页数
+        int totalPage = pageInfo.getPages();
+        Pager<User> pager = new Pager<>();
+        pager.setPage(page);
+        pager.setSize(size);
+        pager.setData(pageInfo.getList());
+        pager.setTotalData(totalUser);
+        pager.setTotalPage(totalPage);
+        return pager;
+    }
+
+    /**
      * 修改用户最后登录时间
+     *
      * @param userId 用户 ID
      */
     @Override
@@ -115,7 +150,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户登录
-     * @param id 工号（学号）
+     *
+     * @param id       工号（学号）
      * @param password 密码
      * @return 登录成功返回 JSON 对象，封装了用户信息和 Token
      */

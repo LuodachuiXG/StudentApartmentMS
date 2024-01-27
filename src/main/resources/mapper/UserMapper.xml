@@ -13,21 +13,21 @@
                gender,
                birth,
                lastLogin
-        FROM user;
+        FROM user
     </select>
 
     <!-- 根据用户 ID 获取用户 -->
     <select id="userByUserId" resultType="User">
         SELECT *
         FROM user
-        WHERE userId = #{userId};
+        WHERE userId = #{userId}
     </select>
 
     <!-- 根据 ID 获取用户 -->
     <select id="userById" resultType="User">
         SELECT *
         FROM user
-        WHERE id = #{id};
+        WHERE id = #{id}
     </select>
 
 

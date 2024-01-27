@@ -1,7 +1,8 @@
 package com.example.studentapartmentms.controller;
 
 
-import com.example.studentapartmentms.common.MyException;
+import com.example.studentapartmentms.common.Utils;
+import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import com.example.studentapartmentms.service.UserService;
@@ -10,6 +11,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -18,12 +20,15 @@ import java.util.List;
 public class UserController {
 
 
-    /** 用户服务接口 **/
+    /**
+     * 用户服务接口
+     **/
     @Resource
     private UserService userService;
 
     /**
      * 用户登录
+     *
      * @param user 用户实体类
      * @return 登录成功返回用户信息和 Token
      */
@@ -34,6 +39,7 @@ public class UserController {
 
     /**
      * 用户注册（此接口只能用于管理员注册）
+     *
      * @param user 用户实体类
      * @return 注册成功返回用户信息，否则返回 null
      */
@@ -48,18 +54,29 @@ public class UserController {
      */
     @GetMapping
     public List<User> allUser(HttpServletRequest request) {
-        // 根据 Token 获取用户
-        String token = request.getHeader("token");
-        User user = userService.userByToken(token);
-
         // 检查当前用户是否是管理员
-        if (user.getRole() == RoleEnum.STUDENT) {
-            // 当前用户身份是学生
-            // 学生无权获取所有用户信息
-            throw new MyException("学生无权查看所有用户");
-        }
+        Utils.isRole(userService, request, RoleEnum.ADMIN);
         // 返回所有用户信息
         return userService.allUser();
+    }
+
+    /**
+     * 分页获取用户信息
+     * 只有管理员可以获取所有用户信息
+     *
+     * @param page 当前页数
+     * @param size 每页大小
+     */
+    @GetMapping("/{page}/{size}")
+    public Pager<User> userByPage(
+            HttpServletRequest request,
+            @PathVariable("page") Integer page,
+            @PathVariable("size") Integer size
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        // 返回所有用户信息
+        return userService.userByPage(page, size);
     }
 
 }

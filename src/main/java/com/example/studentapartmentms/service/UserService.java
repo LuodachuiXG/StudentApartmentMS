@@ -1,5 +1,6 @@
 package com.example.studentapartmentms.service;
 
+import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,6 +39,13 @@ public interface UserService {
      * @param id 工号或学号
      */
     User userById(String id);
+
+    /**
+     * 分页获取用户
+     * @param page 当前页
+     * @param size 每页数据大小
+     */
+    Pager<User> userByPage(Integer page, Integer size);
 
     /**
      * 修改用户最后登录时间
