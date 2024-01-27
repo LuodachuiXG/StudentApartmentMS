@@ -58,7 +58,7 @@ public class UserController {
      * @return 删除成功返回 true
      */
     @DeleteMapping
-    public boolean deleteUser(@RequestParam("userIds") List<Integer> userIds) {
+    public boolean deleteUser(@RequestBody List<Integer> userIds) {
         log.info("DELETE_USER: " + userIds.toString());
         return userService.deleteUser(userIds);
     }

@@ -49,6 +49,9 @@
     <delete id="deleteByUserIds">
         DELETE
         FROM user
-        WHERE userId IN #{userIds}
+        WHERE userId IN
+        <foreach collection="userIds" item="userId" index="index" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
     </delete>
 </mapper>
