@@ -16,10 +16,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,11 +70,31 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 删除用户
+     * 管理员只可以删除学生。删除管理员需要自己注销。
      * @param userIds 用户 ID 集合
      * @return 删除成功返回 true
      */
     @Override
-    public Boolean deleteUser(List<Integer> userIds) {
+    public Boolean deleteUser(HttpServletRequest request, List<Integer> userIds) {
+        // 获取调用者的 Token
+        String token = request.getHeader("token");
+        // 获取调用用户
+        User user = userByToken(token);
+
+        // 获取学生用户
+        List<User> students = userMapper.userByRole(RoleEnum.STUDENT);
+        // 学生用户 ID
+        List<Integer> studentIds = new ArrayList<>();
+        students.forEach((student) -> studentIds.add(student.getUserId()));
+
+        // 遍历要删除的用户 ID，不能包含管理员，除非是当前调用的用户本人
+        userIds.forEach((userId) -> {
+            // 当前要删除的用户 ID 既不是学生的，也不是当前调用者的
+            if (!studentIds.contains(userId) && !userId.equals(user.getUserId())) {
+                throw new MyException("不能删除其他管理员");
+            }
+        });
+
         int result = userMapper.deleteByUserIds(userIds);
         return result > 0;
     }

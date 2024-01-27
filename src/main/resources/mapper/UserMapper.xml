@@ -30,6 +30,13 @@
         WHERE id = #{id}
     </select>
 
+    <!-- 根据身份获取用户 -->
+    <select id="userByRole" resultType="User">
+        SELECT *
+        FROM user
+        WHERE role = #{role}
+    </select>
+
 
     <!-- 添加用户 -->
     <insert id="addUser" useGeneratedKeys="true">

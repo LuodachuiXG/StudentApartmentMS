@@ -4,6 +4,7 @@ import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,10 +25,11 @@ public interface UserService {
 
     /**
      * 删除用户
+     * 管理员只可以删除学生。删除管理员需要自己注销。
      * @param userIds 用户 ID 集合
      * @return 删除成功返回 true
      */
-    Boolean deleteUser(List<Integer> userIds);
+    Boolean deleteUser(HttpServletRequest request, List<Integer> userIds);
 
     /**
      * 获取所有用户

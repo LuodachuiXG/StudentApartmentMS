@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -53,14 +54,21 @@ public class UserController {
 
     /**
      * 删除用户
+     * 管理员只可以删除学生。删除管理员需要自己注销。
      *
-     * @param userIds 用户 ID 集合
+     * @param userIds 学生 ID 集合
      * @return 删除成功返回 true
      */
     @DeleteMapping
-    public boolean deleteUser(@RequestBody List<Integer> userIds) {
-        log.info("DELETE_USER: " + userIds.toString());
-        return userService.deleteUser(userIds);
+    public boolean deleteUser(
+            HttpServletRequest request,
+            @RequestBody List<Integer> userIds
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(userService, request, RoleEnum.ADMIN);
+
+        log.info("DELETE_STUDENT: " + userIds.toString());
+        return userService.deleteUser(request, userIds);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.example.studentapartmentms.mapper;
 
+import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -34,6 +35,12 @@ public interface UserMapper {
      * @param id 工号或学号
      */
     User userById(@Param("id") String id);
+
+    /**
+     * 根据身份获取用户
+     * @param role 用户身份
+     */
+    List<User> userByRole(@Param("role") RoleEnum role);
 
     /**
      * 修改用户最后登录时间
