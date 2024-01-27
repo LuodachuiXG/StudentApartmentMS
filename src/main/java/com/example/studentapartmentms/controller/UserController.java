@@ -12,8 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -59,7 +57,7 @@ public class UserController {
      * @param userIds 用户 ID 集合
      * @return 删除成功返回 true
      */
-    @PostMapping
+    @DeleteMapping
     public boolean deleteUser(@RequestParam("userIds") List<Integer> userIds) {
         log.info("DELETE_USER: " + userIds.toString());
         return userService.deleteUser(userIds);
