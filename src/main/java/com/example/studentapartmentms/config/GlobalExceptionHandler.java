@@ -1,6 +1,7 @@
-package com.example.studentapartmentms.common;
+package com.example.studentapartmentms.config;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.studentapartmentms.expcetion.MyException;
 import com.example.studentapartmentms.pojo.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;

@@ -4,7 +4,7 @@ package com.example.studentapartmentms.service.impl;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.studentapartmentms.common.JWTUtils;
 import com.example.studentapartmentms.common.MD5Utils;
-import com.example.studentapartmentms.common.MyException;
+import com.example.studentapartmentms.expcetion.MyException;
 import com.example.studentapartmentms.common.Utils;
 import com.example.studentapartmentms.mapper.UserMapper;
 import com.example.studentapartmentms.pojo.Pager;

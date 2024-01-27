@@ -13,7 +13,7 @@ public class Pager<T> {
     /** 当前页 **/
     private Integer page;
 
-    /** 每页记录数 **/
+    /** 每页大小 **/
     private Integer size;
 
     /** 数据集合 **/

@@ -8,6 +8,7 @@ import com.example.studentapartmentms.common.JWTUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
@@ -22,12 +23,18 @@ public class JWTInterceptors implements HandlerInterceptor {
             HttpServletResponse response,
             Object handler
     ) {
+
+        // 放行 OPTIONS 请求
+        if (HttpMethod.OPTIONS.name().equals(request.getMethod())) {
+            return true;
+        }
+
         // 获取请求地址
         String requestUrl = request.getRequestURI();
         // 获取请求方法
         String requestMethod = request.getMethod();
-        if ((requestMethod.equals("POST") || requestMethod.equals("OPTIONS")) &&
-                requestUrl.equals("/user")) {
+
+        if (requestMethod.equals("POST") && requestUrl.equals("/user")) {
             // 注册用户接口，放行
             return true;
         }
