@@ -18,6 +18,7 @@ public class MessageBoardServiceImpl implements MessageBoardService {
      */
     @Override
     public MessageBoard allMsgBoard() {
+
         return null;
     }
 }

@@ -2,8 +2,6 @@ package com.example.studentapartmentms.service.impl;
 
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.example.studentapartmentms.common.JWTUtils;
 import com.example.studentapartmentms.common.MD5Utils;
 import com.example.studentapartmentms.common.MyException;
@@ -15,6 +13,7 @@ import com.example.studentapartmentms.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,10 +23,11 @@ import java.util.Map;
  * 用户服务接口实现类
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Resource
-    private UserMapper mapper;
+    private UserMapper userMapper;
 
     /**
      * 添加用户
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     ) {
         user.setRole(RoleEnum.ADMIN);
         if (user.getGender() == null) {
-            throw new MyException("gender 只能为 male 或 female");
+            throw new MyException("gender 只能为 MALE 或 FEMALE");
         }
 
         // 首先检查工号（学号）是否已经存在
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(MD5Utils.getMd5Hash(user.getPassword()));
         // 加入用户
-        int result = mapper.insert(user);
+        int result = userMapper.addUser(user);
         if (result == 1) {
             // 注册成功，返回用户信息，但是抹去密码
             user.setPassword(null);
@@ -67,10 +67,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> allUser() {
-        List<User> users = mapper.selectList(null);
-        // 清除用户敏感信息
-        users.forEach((user -> user.setPassword(null)));
-        return users;
+        return userMapper.allUser();
     }
 
     /**
@@ -90,7 +87,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 根据 userId 获取用户
-        User user = mapper.selectById(userId);
+        User user = userMapper.userByUserId(Integer.valueOf(userId));
         if (user == null) {
             // userId 有问题
             throw new JWTVerificationException("Token 异常");
@@ -104,9 +101,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User userById(String id) {
-        LambdaQueryWrapper<User> qw = new LambdaQueryWrapper<>();
-        qw.eq(User::getId, id);
-        return mapper.selectOne(qw);
+        return userMapper.userById(id);
     }
 
     /**
@@ -115,10 +110,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateLastLogin(Integer userId) {
-        LambdaUpdateWrapper<User> uw = new LambdaUpdateWrapper<>();
-        uw.eq(User::getUserId, userId)
-                .set(User::getLastLogin, LocalDateTime.now());
-        mapper.update(uw);
+        userMapper.updateLastLogin(userId, LocalDateTime.now());
     }
 
     /**

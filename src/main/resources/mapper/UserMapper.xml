@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studentapartmentms.mapper.UserMapper">
+    <!-- 获取所有用户 -->
+    <select id="allUser" resultType="User">
+        SELECT userId,
+               name,
+               id,
+               role,
+               phone,
+               gender,
+               birth,
+               lastLogin
+        FROM user;
+    </select>
+
+    <!-- 根据用户 ID 获取用户 -->
+    <select id="userByUserId" resultType="User">
+        SELECT *
+        FROM user
+        WHERE userId = #{userId};
+    </select>
+
+    <!-- 根据 ID 获取用户 -->
+    <select id="userById" resultType="User">
+        SELECT *
+        FROM user
+        WHERE id = #{id};
+    </select>
+
+
+    <!-- 添加用户 -->
+    <insert id="addUser" useGeneratedKeys="true">
+        insert into user (name, id, password, role, phone, gender, birth)
+        values (#{user.name}, #{user.id}, #{user.password},
+                #{user.role}, #{user.phone}, #{user.gender},
+                #{user.birth})
+    </insert>
+
+    <!-- 修改用户最后登录时间 -->
+    <update id="updateLastLogin">
+        UPDATE user
+        SET lastLogin = #{time}
+        WHERE userId = #{userId}
+    </update>
+
+    <delete id="deleteByUserId">
+        DELETE
+        FROM user
+        WHERE userId = #{userId}
+    </delete>
+</mapper>

@@ -1,9 +1,5 @@
 package com.example.studentapartmentms.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -21,10 +17,8 @@ import java.time.LocalDateTime;
  * 用户实体类
  */
 @Data
-@TableName("user")
 public class User implements Serializable {
     /** 用户 ID **/
-    @TableId(value = "user_id", type = IdType.AUTO)
     private Integer userId;
 
     /** 姓名 **/
@@ -56,6 +50,5 @@ public class User implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @TableField("last_login")
     private LocalDateTime lastLogin;
 }
