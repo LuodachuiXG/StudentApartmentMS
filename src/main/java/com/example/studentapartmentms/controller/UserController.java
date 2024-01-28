@@ -115,4 +115,26 @@ public class UserController {
         return userService.userByPage(page, size);
     }
 
+    /**
+     * 分页和关键词获取用户信息
+     * 只有管理员可以获取所有用户信息
+     * 关键词：工号（学号）、姓名、电话
+     *
+     * @param key 查询的关键词
+     * @param page 当前页数
+     * @param size 每页大小
+     */
+    @GetMapping("/{key}/{page}/{size}")
+    public Pager<User> userByKeyAndPage(
+            HttpServletRequest request,
+            @PathVariable("key") String key,
+            @PathVariable("page") Integer page,
+            @PathVariable("size") Integer size
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        // 返回所有用户信息
+        return userService.userByKeyAndPage(key, page, size);
+    }
+
 }

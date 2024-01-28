@@ -11,6 +11,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
@@ -62,6 +63,24 @@ public class GlobalExceptionHandler {
     })
     public String handleNotFoundException(Exception e) {
         return "/error/404.html";
+    }
+
+
+
+
+    /**
+     * 处理请求方法参数不匹配异常 [MethodArgumentTypeMismatchException]
+     * @param e 异常类
+     * @return 异常信息
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseBody
+    public ResponseEntity<Response<Object>> handleMethodArgumentException(Exception e) {
+        Response<Object> apiResponse = new Response<>();
+        apiResponse.setCode(HttpStatus.BAD_REQUEST.value());
+        apiResponse.setErrMsg("请求参数不匹配");
+        apiResponse.setData(null);
+        return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
     }
 
     /**

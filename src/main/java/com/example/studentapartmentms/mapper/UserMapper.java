@@ -43,6 +43,15 @@ public interface UserMapper {
     List<User> userByRole(@Param("role") RoleEnum role);
 
     /**
+     * 关键词获取用户信息
+     * 关键词：工号（学号）、姓名、电话
+     *
+     * @param key 查询的关键词
+     */
+    List<User> userByKey(@Param("key") String key);
+
+
+    /**
      * 修改用户最后登录时间
      * @param userId 用户 ID
      * @param time 最后登录时间

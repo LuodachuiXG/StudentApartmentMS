@@ -1,12 +1,15 @@
 package com.example.studentapartmentms.common;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import com.example.studentapartmentms.service.UserService;
 import com.example.studentapartmentms.service.impl.UserServiceImpl;
+import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,5 +82,28 @@ public class Utils {
         if (user.getRole() != role) {
             throw new JWTVerificationException("无权访问受保护资源");
         }
+    }
+
+    /**
+     * 用于分页的操作
+     * 在执行过  PageHelper.startPage() 方法后获取 Pager 分页实体类
+     * @param list SQL 返回的结果集
+     * @param page 当前页数
+     * @param size 每页大小
+     * @return 封装好的 Pager 对象
+     */
+    public static <T> Pager<T> getPager(List<? extends T> list, Integer page, Integer size) {
+        PageInfo<T> pageInfo = new PageInfo<>(list);
+        // 获取项目总数
+        long totalData = pageInfo.getTotal();
+        // 获取总页数
+        int totalPage = pageInfo.getPages();
+        Pager<T> pager = new Pager<>();
+        pager.setPage(page);
+        pager.setSize(size);
+        pager.setData(pageInfo.getList());
+        pager.setTotalData(totalData);
+        pager.setTotalPage(totalPage);
+        return pager;
     }
 }

@@ -47,6 +47,17 @@ public interface UserService {
     User userByToken(String token);
 
     /**
+     * 分页和关键词获取用户信息
+     * 只有管理员可以获取所有用户信息
+     * 关键词：工号（学号）、姓名、电话
+     *
+     * @param key 查询的关键词
+     * @param page 当前页数
+     * @param size 每页大小
+     */
+    Pager<User> userByKeyAndPage(String key, Integer page, Integer size);
+
+    /**
      * 根据 ID 获取用户
      * @param id 工号或学号
      */
@@ -72,5 +83,4 @@ public interface UserService {
      * @return 登录成功返回 JSON 对象，封装了用户信息和 Token
      */
     ObjectNode login(String id, String password);
-
 }

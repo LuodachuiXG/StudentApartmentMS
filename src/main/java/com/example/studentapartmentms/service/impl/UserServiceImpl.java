@@ -166,18 +166,25 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(page, size);
         // 此处的获取所有用户的 SQL 已经被加上了分页代码
         List<User> list = allUser();
-        PageInfo<User> pageInfo = new PageInfo<>(list);
-        // 获取用户总数
-        long totalUser = pageInfo.getTotal();
-        // 获取总页数
-        int totalPage = pageInfo.getPages();
-        Pager<User> pager = new Pager<>();
-        pager.setPage(page);
-        pager.setSize(size);
-        pager.setData(pageInfo.getList());
-        pager.setTotalData(totalUser);
-        pager.setTotalPage(totalPage);
-        return pager;
+        return Utils.getPager(list, page, size);
+    }
+
+    /**
+     * 分页和关键词获取用户信息
+     * 只有管理员可以获取所有用户信息
+     * 关键词：工号（学号）、姓名、电话
+     *
+     * @param key 查询的关键词
+     * @param page 当前页数
+     * @param size 每页大小
+     */
+    @Override
+    public Pager<User> userByKeyAndPage(String key, Integer page, Integer size) {
+        // 开始分页查询，执行此代码之后的 SQL 会被自动加上分页的代码
+        PageHelper.startPage(page, size);
+        // 此处的获取所有用户的 SQL 已经被加上了分页代码
+        List<User> list = userMapper.userByKey(key);
+        return Utils.getPager(list, page, size);
     }
 
     /**

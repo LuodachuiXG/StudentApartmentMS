@@ -37,6 +37,15 @@
         WHERE role = #{role}
     </select>
 
+    <!-- 根据关键字获取用户，关键字来自：工号（学号）、姓名、电话 -->
+    <select id="userByKey" resultType="User">
+        SELECT *
+        FROM user
+        WHERE id LIKE '%${key}%'
+           OR name LIKE '%${key}%'
+           OR phone LIKE '%${key}%'
+    </select>
+
 
     <!-- 添加用户 -->
     <insert id="addUser" useGeneratedKeys="true">
