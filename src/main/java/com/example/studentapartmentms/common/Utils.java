@@ -7,6 +7,9 @@ import com.example.studentapartmentms.service.UserService;
 import com.example.studentapartmentms.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 工具类
  */
@@ -15,16 +18,31 @@ public class Utils {
      * 判断文本是否是数字
      *
      * @param str 要判断的文本
+     * @param length 数字长度，小于等于 0 表示任意长度
+     * @return 数字返回 true，反之 false
+     */
+    public static boolean isNumber(String str, Integer length) {
+        Pattern pattern;
+        String regex = "\\d+";
+        if (length > 0) {
+            regex = "\\d{" + length + "}";
+        }
+        pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
+    }
+
+    /**
+     * 判断文本是否是数字
+     *
+     * @param str 要判断的文本
      * @return 数字返回 true，反之 false
      */
     public static boolean isNumber(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return isNumber(str, -1);
     }
+
+
 
     /**
      * 根据 Token 判断绑定的用户是否是指定的角色

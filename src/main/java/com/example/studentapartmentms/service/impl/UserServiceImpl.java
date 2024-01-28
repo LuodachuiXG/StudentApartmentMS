@@ -55,6 +55,16 @@ public class UserServiceImpl implements UserService {
             throw new MyException("工号（学号）已经存在");
         }
 
+        // 验证手机号正确性
+        if (!Utils.isNumber(user.getPhone(), 11)) {
+            throw new MyException("手机号格式有误");
+        }
+
+        // 学生默认密码为手机号后六位
+        if (role == RoleEnum.STUDENT) {
+            user.setPassword(user.getPhone().substring(5, 11));
+        }
+
         user.setPassword(MD5Utils.getMd5Hash(user.getPassword()));
         // 加入用户
         int result = userMapper.addUser(user);
