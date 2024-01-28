@@ -41,7 +41,7 @@ public class UserController {
     }
 
     /**
-     * 用户注册（此接口只能用于管理员注册）
+     * 用户注册（此接口只能用于管理员注册，学生由管理员添加）
      *
      * @param user 用户实体类
      * @return 注册成功返回用户信息，否则返回 null
@@ -49,7 +49,20 @@ public class UserController {
     @PostMapping
     public User addUser(@RequestBody User user) {
         log.info("REGISTER: " + user.getId());
-        return userService.addUser(user);
+        return userService.addUser(user, RoleEnum.ADMIN);
+    }
+
+
+    /**
+     * 添加学生（此接口只能由管理员调用）
+     *
+     * @param user 用户实体类
+     * @return 添加成功后返回学生信息，否则返回 null
+     */
+    @PostMapping("/student")
+    public User addStudent(@RequestBody User user) {
+        log.info("ADD_STUDENT: " + user.getId());
+        return userService.addUser(user, RoleEnum.STUDENT);
     }
 
     /**
@@ -67,7 +80,7 @@ public class UserController {
         // 检查当前用户是否是管理员
         Utils.isRole(userService, request, RoleEnum.ADMIN);
 
-        log.info("DELETE_STUDENT: " + userIds.toString());
+        log.info("DELETE_USER: " + userIds.toString());
         return userService.deleteUser(request, userIds);
     }
 

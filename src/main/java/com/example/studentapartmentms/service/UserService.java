@@ -1,6 +1,7 @@
 package com.example.studentapartmentms.service;
 
 import com.example.studentapartmentms.pojo.Pager;
+import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -18,9 +19,10 @@ public interface UserService {
     /**
      * 添加用户
      * @param user 用户实体类
+     * @param role 用户身份
      * @return 注册成功返回用户信息，否则返回 null
      */
-    User addUser(User user);
+    User addUser(User user, RoleEnum role);
 
 
     /**

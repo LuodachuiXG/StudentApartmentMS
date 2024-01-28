@@ -37,14 +37,13 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 添加用户
-     *
      * @param user 用户实体类
+     * @param role 用户身份
      * @return 注册成功返回用户信息，否则返回 null
      */
     @Override
-    public User addUser(User user
-    ) {
-        user.setRole(RoleEnum.ADMIN);
+    public User addUser(User user, RoleEnum role) {
+        user.setRole(role);
         if (user.getGender() == null) {
             throw new MyException("gender 只能为 MALE 或 FEMALE");
         }
