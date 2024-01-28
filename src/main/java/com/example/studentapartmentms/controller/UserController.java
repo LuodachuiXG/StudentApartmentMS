@@ -115,7 +115,7 @@ public class UserController {
             // 传参错误
             Utils.throwMismatchParamException();
         }
-        log.info("UPDATE_USER: " + user);
+        log.info("UPDATE_USER: " + user.getUserId());
         return userService.updateUser(requestUserId, user);
     }
 

@@ -98,6 +98,12 @@ public class UserServiceImpl implements UserService {
             }
         });
 
+
+        /*
+          此处应该删除当前账号对应的一些信息，例如所住宿舍、管理的公寓等。待编写...
+          或者也可以在数据库绑定外键
+         */
+
         int result = userMapper.deleteByUserIds(userIds);
         return result > 0;
     }
