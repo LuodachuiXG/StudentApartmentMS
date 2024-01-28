@@ -14,9 +14,7 @@ import com.example.studentapartmentms.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -80,16 +78,12 @@ public class UserServiceImpl implements UserService {
     /**
      * 删除用户
      * 管理员只可以删除学生。删除管理员需要自己注销。
+     * @param requestUserId 调用者用户 ID
      * @param userIds 用户 ID 集合
      * @return 删除成功返回 true
      */
     @Override
-    public Boolean deleteUser(HttpServletRequest request, List<Integer> userIds) {
-        // 获取调用者的 Token
-        String token = request.getHeader("token");
-        // 获取调用用户
-        User user = userByToken(token);
-
+    public Boolean deleteUser(Integer requestUserId, List<Integer> userIds) {
         // 获取学生用户
         List<User> students = userMapper.userByRole(RoleEnum.STUDENT);
         // 学生用户 ID
@@ -99,13 +93,90 @@ public class UserServiceImpl implements UserService {
         // 遍历要删除的用户 ID，不能包含管理员，除非是当前调用的用户本人
         userIds.forEach((userId) -> {
             // 当前要删除的用户 ID 既不是学生的，也不是当前调用者的
-            if (!studentIds.contains(userId) && !userId.equals(user.getUserId())) {
+            if (!studentIds.contains(userId) && !userId.equals(requestUserId)) {
                 throw new MyException("不能删除其他管理员");
             }
         });
 
         int result = userMapper.deleteByUserIds(userIds);
         return result > 0;
+    }
+
+    /**
+     * 修改用户
+     * @param requestUserId 请求调用者 ID
+     * @param user 用户实体类
+     * @return 修改成功返回 true
+     */
+    @Override
+    public Boolean updateUser(Integer requestUserId, User user) {
+        // 根据用户 ID 获取请求用户实体类
+        User requestUser = userByUserId(requestUserId);
+
+        // 根据用户 ID 获取将要修改的用户实体类
+        User willUpdateUser = userByUserId(user.getUserId());
+
+        if (willUpdateUser == null) {
+            // 将要修改的用户为 null
+            throw new MyException("待修改的用户不存在");
+        }
+
+        // 请求者是学生，但是修改的用户不是自己
+        if (requestUser.getRole() == RoleEnum.STUDENT && (!requestUserId.equals(user.getUserId()))) {
+            throw new MyException("学生无权修改其他用户");
+        }
+
+        // 请求者是管理员，将要修改的用户也是管理员，但是不是自己
+        if (requestUser.getRole() == RoleEnum.ADMIN &&
+                (willUpdateUser.getRole() == RoleEnum.ADMIN &&
+                        !requestUser.getUserId().equals(willUpdateUser.getUserId()))) {
+            throw new MyException("管理员无权修改其他管理员");
+        }
+
+        // 验证手机号正确性
+        if (!Utils.isNumber(user.getPhone(), 11)) {
+            throw new MyException("手机号格式有误");
+        }
+
+        String password = user.getPassword();
+        // 查看密码是否为空
+        if (password != null && !password.isBlank()) {
+            // 密码不为空，先修改密码
+            userMapper.updateUserPassword(user.getUserId(), MD5Utils.getMd5Hash(password));
+        }
+
+        return userMapper.updateUser(user) > 0;
+    }
+
+    /**
+     * 修改用户最后登录时间
+     *
+     * @param userId 用户 ID
+     */
+    @Override
+    public void updateLastLogin(Integer userId) {
+        userMapper.updateLastLogin(userId, LocalDateTime.now());
+    }
+
+    /**
+     * 修改用户密码
+     * 此接口只能修改密码的用户本人调用
+     * @param requestUserId 请求者用户 ID
+     * @param oldPwd 旧密码
+     * @param newPwd 新密码
+     * @return 修改成功返回 true
+     */
+    @Override
+    public Boolean updateUserPassword(Integer requestUserId, String oldPwd, String newPwd) {
+        // 获取请求用户
+        User user = userByUserId(requestUserId);
+        // 验证旧密码是否正确
+        if (!user.getPassword().equals(MD5Utils.getMd5Hash(oldPwd))) {
+            // 旧密码错误
+            throw new MyException("旧密码错误");
+        }
+
+        return userMapper.updateUserPassword(requestUserId, MD5Utils.getMd5Hash(newPwd)) > 0;
     }
 
     /**
@@ -126,22 +197,27 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User userByToken(String token) {
-        // 获取当前 Token Claims
-        Map<String, String> claims = JWTUtils.getClaims(token);
-        // 获取当前 Token 绑定的用户 ID
-        String userId = claims.get("userId");
-        if (userId == null || !Utils.isNumber(userId)) {
-            // userId 有问题
-            throw new JWTVerificationException("Token 异常");
-        }
+        // 根据 Token 获取用户 ID
+        int userId = Utils.getUserIdByToken(token);
 
         // 根据 userId 获取用户
-        User user = userMapper.userByUserId(Integer.valueOf(userId));
+        User user = userByUserId(userId);
         if (user == null) {
             // userId 有问题
             throw new JWTVerificationException("Token 异常");
         }
         return user;
+    }
+
+    /**
+     * 根据用户 ID 获取用户
+     *
+     * @param userId 用户 ID
+     * @return 用户或 null
+     */
+    @Override
+    public User userByUserId(Integer userId) {
+        return userMapper.userByUserId(userId);
     }
 
     /**
@@ -185,16 +261,6 @@ public class UserServiceImpl implements UserService {
         // 此处的获取所有用户的 SQL 已经被加上了分页代码
         List<User> list = userMapper.userByKey(key);
         return Utils.getPager(list, page, size);
-    }
-
-    /**
-     * 修改用户最后登录时间
-     *
-     * @param userId 用户 ID
-     */
-    @Override
-    public void updateLastLogin(Integer userId) {
-        userMapper.updateLastLogin(userId, LocalDateTime.now());
     }
 
     /**

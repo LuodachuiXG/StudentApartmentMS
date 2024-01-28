@@ -5,13 +5,14 @@ import com.example.studentapartmentms.expcetion.MyException;
 import com.example.studentapartmentms.pojo.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
@@ -69,11 +70,11 @@ public class GlobalExceptionHandler {
 
 
     /**
-     * 处理请求方法参数不匹配异常 [MethodArgumentTypeMismatchException]
+     * 处理请求方法参数不匹配异常
      * @param e 异常类
      * @return 异常信息
      */
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ExceptionHandler({TypeMismatchException.class,MissingRequestValueException.class})
     @ResponseBody
     public ResponseEntity<Response<Object>> handleMethodArgumentException(Exception e) {
         Response<Object> apiResponse = new Response<>();

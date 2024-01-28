@@ -62,6 +62,24 @@
         WHERE userId = #{userId}
     </update>
 
+    <!-- 修改用户 -->
+    <update id="updateUser">
+        UPDATE user
+        SET name  = #{user.name},
+            id    = #{user.id},
+            phone = #{user.phone},
+            gender = #{user.gender},
+            birth = #{user.birth}
+        WHERE userId = #{user.userId}
+    </update>
+
+    <!-- 修改用户密码 -->
+    <update id="updateUserPassword">
+        UPDATE user
+        SET password = #{password}
+        WHERE userId = #{userId}
+    </update>
+
     <delete id="deleteByUserIds">
         DELETE
         FROM user

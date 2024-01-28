@@ -8,8 +8,10 @@ import com.example.studentapartmentms.service.UserService;
 import com.example.studentapartmentms.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.TypeMismatchException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,6 +87,33 @@ public class Utils {
     }
 
     /**
+     * 根据 Token 获取用户 ID
+     *
+     * @param token Token
+     */
+    public static Integer getUserIdByToken(String token) {
+        // 获取当前 Token Claims
+        Map<String, String> claims = JWTUtils.getClaims(token);
+        // 获取当前 Token 绑定的用户 ID
+        String userId = claims.get("userId");
+        if (!isNumber(userId)) {
+            // userId 不是数字
+            throw new JWTVerificationException("Token 异常");
+        }
+        return Integer.valueOf(userId);
+    }
+
+    /**
+     * 根据 HttpServletRequest 获取调用者用户 ID
+     * @param request HttpRequest 请求
+     * @return 用户 ID
+     */
+    public static Integer getUserIdByRequest(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        return getUserIdByToken(token);
+    }
+
+    /**
      * 用于分页的操作
      * 在执行过  PageHelper.startPage() 方法后获取 Pager 分页实体类
      * @param list SQL 返回的结果集
@@ -105,5 +134,14 @@ public class Utils {
         pager.setTotalData(totalData);
         pager.setTotalPage(totalPage);
         return pager;
+    }
+
+    /**
+     * 抛出参数不匹配异常
+     */
+    public static void throwMismatchParamException() {
+        // 该异常类形参填什么无关紧要
+        // 异常处理器只拦截对应的异常并告知调用方参数不匹配
+        throw new TypeMismatchException("", String.class);
     }
 }

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户服务接口
@@ -28,10 +29,35 @@ public interface UserService {
     /**
      * 删除用户
      * 管理员只可以删除学生。删除管理员需要自己注销。
+     * @param requestUserId 调用者用户 ID
      * @param userIds 用户 ID 集合
      * @return 删除成功返回 true
      */
-    Boolean deleteUser(HttpServletRequest request, List<Integer> userIds);
+    Boolean deleteUser(Integer requestUserId, List<Integer> userIds);
+
+    /**
+     * 修改用户
+     * @param requestUserId 请求调用者 ID
+     * @param user 用户实体类
+     * @return 修改成功返回 true
+     */
+    Boolean updateUser(Integer requestUserId, User user);
+
+    /**
+     * 修改用户最后登录时间
+     * @param userId 用户 ID
+     */
+    void updateLastLogin(Integer userId);
+
+    /**
+     * 修改用户密码
+     * 此接口只能修改密码的用户本人调用
+     * @param requestUserId 请求者用户 ID
+     * @param oldPwd 旧密码
+     * @param newPwd 新密码
+     * @return 修改成功返回 true
+     */
+    Boolean updateUserPassword(Integer requestUserId, String oldPwd, String newPwd);
 
     /**
      * 获取所有用户
@@ -45,6 +71,14 @@ public interface UserService {
      * @return 用户存在则返回，不存在抛出 JWT 验证异常
      */
     User userByToken(String token);
+
+    /**
+     * 根据用户 ID 获取用户
+     *
+     * @param userId 用户 ID
+     * @return 用户或 null
+     */
+    User userByUserId(Integer userId);
 
     /**
      * 分页和关键词获取用户信息
@@ -69,12 +103,6 @@ public interface UserService {
      * @param size 每页数据大小
      */
     Pager<User> userByPage(Integer page, Integer size);
-
-    /**
-     * 修改用户最后登录时间
-     * @param userId 用户 ID
-     */
-    void updateLastLogin(Integer userId);
 
     /**
      * 用户登录
