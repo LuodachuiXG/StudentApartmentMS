@@ -110,6 +110,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户
+     * 管理员不能修改其他管理员信息，但可以修改学生信息
+     * 学生只能修改自己的信息
      * @param requestUserId 请求调用者 ID
      * @param user 用户实体类
      * @return 修改成功返回 true
@@ -137,6 +139,16 @@ public class UserServiceImpl implements UserService {
                 (willUpdateUser.getRole() == RoleEnum.ADMIN &&
                         !requestUser.getUserId().equals(willUpdateUser.getUserId()))) {
             throw new MyException("管理员无权修改其他管理员");
+        }
+
+        // 验证工号（学号）是否有变动，如果有变动的话，查看是否已经存在相同工号（学号）
+        if (!willUpdateUser.getId().equals(user.getId())) {
+            // 工号（学号）有变动，查看是否存在相同工号学生
+            User u = userById(user.getId());
+            if (u != null) {
+                // 存在相同工号（学号）用户
+                throw new MyException("工号（学号）已经存在");
+            }
         }
 
         // 验证手机号正确性

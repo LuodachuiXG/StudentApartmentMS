@@ -37,6 +37,8 @@ public interface UserService {
 
     /**
      * 修改用户
+     * 管理员不能修改其他管理员信息，但可以修改学生信息
+     * 学生只能修改自己的信息
      * @param requestUserId 请求调用者 ID
      * @param user 用户实体类
      * @return 修改成功返回 true
