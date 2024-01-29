@@ -25,49 +25,20 @@ public class DormitoryServiceImpl implements DormitoryService {
     /**
      * 获取所有宿舍
      * 仅管理员
+     *
      * @return 宿舍集合
      */
     @Override
-    public List<Dormitory> allDorm() {
+    public List<Dormitory> dorms() {
         // 获取所有宿舍。此 Dormitory 实体类不包含 admins 字段，需二次查询
-        List<Dormitory> dorms = dormitoryMapper.allDormitory();
+        List<Dormitory> dorms = dormitoryMapper.allDorm();
 
         // 查询每个宿舍的管理员
-        dorms.forEach( dorm -> {
+        dorms.forEach(dorm -> {
             List<User> admins = dormitoryMapper.adminsByDormitoryId(dorm.getDormitoryId());
             dorm.setAdmins(admins);
         });
         return dorms;
-    }
-
-    /**
-     * 获取所有宿舍房间
-     *
-     * @param dormId 宿舍 ID
-     */
-    @Override
-    public List<Room> allRoom(Integer dormId) {
-        return null;
-    }
-
-    /**
-     * 获取所有宿舍管理员
-     *
-     * @param dormId 宿舍 ID
-     */
-    @Override
-    public List<Room> allDormAdmin(Integer dormId) {
-        return null;
-    }
-
-    /**
-     * 获取所有宿舍房间居住用户
-     *
-     * @param roomId 房间 ID
-     */
-    @Override
-    public List<Room> allRoomUser(Integer roomId) {
-        return null;
     }
 
     /**
@@ -78,23 +49,26 @@ public class DormitoryServiceImpl implements DormitoryService {
      * @param size   每页大小
      */
     @Override
-    public Pager<Dormitory> dormRoomByPage(Integer dormId, Integer page, Integer size) {
-        return null;
+    public Pager<Room> dormRoomsByPage(Integer dormId, Integer page, Integer size) {
+        // 开始分页查询，执行此代码之后的 SQL 会被自动加上分页的代码
+        PageHelper.startPage(page, size);
+        // 此处的获取所有宿舍的 SQL 已经被加上了分页代码
+        List<Room> list = dormitoryMapper.roomByDormId(dormId);
+        return Utils.getPager(list, page, size);
     }
 
     /**
      * 分页获取宿舍
-     * 仅管理员
      *
      * @param page 当前页数
      * @param size 每页大小
      */
     @Override
-    public Pager<Dormitory> dormByPage(Integer page, Integer size) {
+    public Pager<Dormitory> dormsByPage(Integer page, Integer size) {
         // 开始分页查询，执行此代码之后的 SQL 会被自动加上分页的代码
         PageHelper.startPage(page, size);
         // 此处的获取所有宿舍的 SQL 已经被加上了分页代码
-        List<Dormitory> list = allDorm();
+        List<Dormitory> list = dorms();
         return Utils.getPager(list, page, size);
     }
 
@@ -105,7 +79,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean addDorms(List<String> names) {
-        return null;
+        return dormitoryMapper.addDorms(names) > 0;
     }
 
     /**
@@ -116,7 +90,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean addDormAdmins(Integer dormId, List<Integer> userIds) {
-        return null;
+        return dormitoryMapper.addDormAdmins(dormId, userIds) > 0;
     }
 
     /**
@@ -127,7 +101,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean addDormRooms(Integer dormId, List<Room> rooms) {
-        return null;
+        return dormitoryMapper.addDormRooms(dormId, rooms) > 0;
     }
 
     /**
@@ -137,17 +111,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean deleteDormsByDormIds(List<Integer> dormIds) {
-        return null;
-    }
-
-    /**
-     * 根据宿舍 ID 删除宿舍管理员
-     *
-     * @param dormIds 宿舍 ID 集合
-     */
-    @Override
-    public Boolean deleteDormAdminsByDormIds(List<Integer> dormIds) {
-        return null;
+        return dormitoryMapper.deleteDormsByDormIds(dormIds) > 0;
     }
 
     /**
@@ -157,17 +121,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean deleteDormAdminsByDormAdminIds(List<Integer> dormAdminIds) {
-        return null;
-    }
-
-    /**
-     * 根据用户 ID 删除宿舍管理员
-     *
-     * @param userIds 用户 ID 集合
-     */
-    @Override
-    public Boolean deleteDormAdminsByUserIds(List<Integer> userIds) {
-        return null;
+        return dormitoryMapper.deleteDormAdminsByDormAdminIds(dormAdminIds) > 0;
     }
 
     /**
@@ -177,27 +131,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean deleteRoomsByRoomIds(List<Integer> roomIds) {
-        return null;
-    }
-
-    /**
-     * 根据宿舍 ID 删除宿舍房间
-     *
-     * @param dormIds 宿舍 ID 集合
-     */
-    @Override
-    public Boolean deleteRoomsByDormIds(List<Integer> dormIds) {
-        return null;
-    }
-
-    /**
-     * 根据宿舍房间 ID 删除宿舍房间住户
-     *
-     * @param roomIds 宿舍房间 ID 集合
-     */
-    @Override
-    public Boolean deleteRoomUsersByRoomIds(List<Integer> roomIds) {
-        return null;
+        return dormitoryMapper.deleteRoomsByRoomIds(roomIds) > 0;
     }
 
     /**
@@ -207,7 +141,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean deleteRoomUsersByUserIds(List<Integer> userIds) {
-        return null;
+        return dormitoryMapper.deleteRoomUsersByUserIds(userIds) > 0;
     }
 
     /**
@@ -217,7 +151,7 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean updateDorm(Dormitory dorm) {
-        return null;
+        return dormitoryMapper.updateDorm(dorm) > 0;
     }
 
     /**
@@ -227,6 +161,6 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean updateRoom(Room room) {
-        return null;
+        return dormitoryMapper.updateRoom(room) > 0;
     }
 }

@@ -15,28 +15,7 @@ public interface DormitoryService {
     /**
      * 获取所有宿舍
      */
-    List<Dormitory> allDorm();
-
-    /**
-     * 获取所有宿舍房间
-     *
-     * @param dormId 宿舍 ID
-     */
-    List<Room> allRoom(Integer dormId);
-
-    /**
-     * 获取所有宿舍管理员
-     *
-     * @param dormId 宿舍 ID
-     */
-    List<Room> allDormAdmin(Integer dormId);
-
-    /**
-     * 获取所有宿舍房间居住用户
-     *
-     * @param roomId 房间 ID
-     */
-    List<Room> allRoomUser(Integer roomId);
+    List<Dormitory> dorms();
 
     /**
      * 分页获取所有宿舍房间
@@ -45,7 +24,7 @@ public interface DormitoryService {
      * @param page   当前页数
      * @param size   每页大小
      */
-    Pager<Dormitory> dormRoomByPage(Integer dormId, Integer page, Integer size);
+    Pager<Room> dormRoomsByPage(Integer dormId, Integer page, Integer size);
 
     /**
      * 分页获取宿舍
@@ -53,7 +32,7 @@ public interface DormitoryService {
      * @param page 当前页数
      * @param size 每页大小
      */
-    Pager<Dormitory> dormByPage(Integer page, Integer size);
+    Pager<Dormitory> dormsByPage(Integer page, Integer size);
 
     /**
      * 添加宿舍
@@ -87,13 +66,6 @@ public interface DormitoryService {
     Boolean deleteDormsByDormIds(List<Integer> dormIds);
 
     /**
-     * 根据宿舍 ID 删除宿舍管理员
-     *
-     * @param dormIds 宿舍 ID 集合
-     */
-    Boolean deleteDormAdminsByDormIds(List<Integer> dormIds);
-
-    /**
      * 根据宿舍管理员 ID 删除宿舍管理员
      *
      * @param dormAdminIds 宿舍管理员 ID 集合
@@ -102,32 +74,11 @@ public interface DormitoryService {
 
 
     /**
-     * 根据用户 ID 删除宿舍管理员
-     *
-     * @param userIds 用户 ID 集合
-     */
-    Boolean deleteDormAdminsByUserIds(List<Integer> userIds);
-
-    /**
      * 根据宿舍房间 ID 删除宿舍房间
      *
      * @param roomIds 宿舍房间 ID 集合
      */
     Boolean deleteRoomsByRoomIds(List<Integer> roomIds);
-
-    /**
-     * 根据宿舍 ID 删除宿舍房间
-     *
-     * @param dormIds 宿舍 ID 集合
-     */
-    Boolean deleteRoomsByDormIds(List<Integer> dormIds);
-
-    /**
-     * 根据宿舍房间 ID 删除宿舍房间住户
-     *
-     * @param roomIds 宿舍房间 ID 集合
-     */
-    Boolean deleteRoomUsersByRoomIds(List<Integer> roomIds);
 
     /**
      * 根据用户 ID 删除宿舍房间住户

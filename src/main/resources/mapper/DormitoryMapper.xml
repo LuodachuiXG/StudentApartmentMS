@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.studentapartmentms.mapper.DormitoryMapper">
     <!-- 获取所有宿舍 -->
-    <select id="allDormitory" resultType="Dormitory">
+    <select id="allDorm" resultType="Dormitory">
         SELECT d.dormitoryId,
                d.name,
                COUNT(DISTINCT ru.userId) AS headCount

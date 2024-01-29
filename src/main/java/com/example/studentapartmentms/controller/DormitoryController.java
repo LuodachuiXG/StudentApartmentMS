@@ -41,7 +41,7 @@ public class DormitoryController {
         // 检查当前用户是否是管理员
         Utils.isRole(userService, request, RoleEnum.ADMIN);
         // 返回所有宿舍
-        return dormitoryService.allDorm();
+        return dormitoryService.dorms();
     }
 
     /**
