@@ -138,7 +138,7 @@ public interface DormitoryMapper {
      *
      * @param dormId 宿舍 ID
      */
-    List<Room> dormAdminByDormId(Integer dormId);
+    List<User> dormAdminByDormId(Integer dormId);
 
     /**
      * 根据宿舍房间 ID 获取所有宿舍房间居住用户

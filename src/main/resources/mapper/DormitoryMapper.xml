@@ -3,6 +3,111 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.studentapartmentms.mapper.DormitoryMapper">
+    <!-- 添加宿舍 -->
+    <insert id="addDorms" useGeneratedKeys="true">
+        INSERT INTO dormitory(name) VALUES
+        <foreach collection="names" item="name" separator=",">
+            (#{name})
+        </foreach>
+    </insert>
+
+    <!-- 添加宿舍管理员 -->
+    <insert id="addDormAdmins" useGeneratedKeys="true">
+        INSERT INTO dormitory_admin(dormitoryId, userId) VALUE
+        <foreach collection="userIds" item="userId" separator=",">
+            (#{dormId}, #{userId})
+        </foreach>
+    </insert>
+
+
+    <!-- 添加宿舍房间 -->
+    <insert id="addDormRooms" useGeneratedKeys="true">
+        INSERT INTO room(dormitoryId, name, headCount) VALUES
+        <foreach collection="rooms" item="room" separator=",">
+            (#{dormId}, #{room.name}, #{room.headCount})
+        </foreach>
+    </insert>
+
+    <!-- 修改宿舍信息 -->
+    <update id="updateDorm">
+        UPDATE dormitory
+        SET name = #{dorm.name}
+        WHERE dormitoryId = #{dorm.dormitoryId}
+    </update>
+
+    <!-- 修改宿舍房间信息 -->
+    <update id="updateRoom">
+        UPDATE room
+        SET name      = #{room.name},
+            headCount = #{room.headCount}
+        WHERE roomId = #{room.roomId}
+    </update>
+
+    <!-- 根据宿舍 ID 删除宿舍 -->
+    <delete id="deleteDormsByDormIds">
+        DELETE FROM dormitory WHERE dormitoryId IN
+        <foreach collection="dormIds" item="dormId" open="(" separator="," close=")">
+            #{dormId}
+        </foreach>
+    </delete>
+
+    <!-- 根据宿舍 ID 删除宿舍管理员 -->
+    <delete id="deleteDormAdminsByDormIds">
+        DELETE FROM dormitory_admin WHERE dormitoryId IN
+        <foreach collection="dormIds" item="dormId" open="(" separator="," close=")">
+            #{dormId}
+        </foreach>
+    </delete>
+
+    <!-- 根据宿舍管理员 ID 删除宿舍管理员 -->
+    <delete id="deleteDormAdminsByDormAdminIds">
+        DELETE FROM dormitory_admin WHERE dormitoryAdminId IN
+        <foreach collection="dormAdminIds" item="dormAdminId" open="(" separator="," close=")">
+            #{dormAdminId}
+        </foreach>
+    </delete>
+
+    <!-- 根据用户 ID 删除宿舍管理员 -->
+    <delete id="deleteDormAdminsByUserIds">
+        DELETE FROM dormitory_admin WHERE userId IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <!-- 根据宿舍房间 ID 删除宿舍房间 -->
+    <delete id="deleteRoomsByRoomIds">
+        DELETE FROM room WHERE roomId IN
+        <foreach collection="roomIds" item="roomId" open="(" separator="," close=")">
+            #{roomId}
+        </foreach>
+    </delete>
+
+    <!-- 根据宿舍 ID 删除宿舍房间 -->
+    <delete id="deleteRoomsByDormIds">
+        DELETE FROM room WHERE dormitoryId IN
+        <foreach collection="dormIds" item="dormId" open="(" separator="," close=")">
+            #{dormId}
+        </foreach>
+    </delete>
+
+    <!-- 根据宿舍房间 ID 删除宿舍房间住户 -->
+    <delete id="deleteRoomUsersByRoomIds">
+        DELETE FROM room_user WHERE roomId IN
+        <foreach collection="roomIds" item="roomId" open="(" separator="," close=")">
+            #{roomId}
+        </foreach>
+    </delete>
+
+    <!-- 根据用户 ID 删除宿舍房间住户 -->
+    <delete id="deleteRoomUsersByUserIds">
+        DELETE FROM room_user WHERE userId IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+
     <!-- 获取所有宿舍 -->
     <select id="allDorm" resultType="Dormitory">
         SELECT d.dormitoryId,
@@ -21,5 +126,35 @@
         FROM user u
                  LEFT JOIN dormitory_admin da ON u.userId = da.userId
         WHERE da.dormitoryId = #{dormitoryId}
+    </select>
+
+    <!-- 根据宿舍 ID 获取所有宿舍房间 -->
+    <select id="roomByDormId" resultType="Room">
+        SELECT *
+        FROM room
+        WHERE dormitoryId = #{dormId}
+    </select>
+
+    <!-- 根据宿舍 ID 获取所有宿舍管理员 -->
+    <select id="dormAdminByDormId" resultType="User">
+        SELECT u.userId, u.id, u.name
+        FROM user u
+        LEFT JOIN dormitory_admin da ON u.userId = da.userId
+        WHERE da.dormitoryId = #{dormId}
+    </select>
+
+    <!-- 根据宿舍房间 ID 获取所有宿舍房间居住用户 -->
+    <select id="roomUserByRoomId" resultType="User">
+        SELECT u.userId,
+               u.name,
+               u.id,
+               u.role,
+               u.phone,
+               u.gender,
+               u.birth,
+               u.lastLogin
+        FROM user u
+                 LEFT JOIN room_user rs ON rs.userId = u.userId
+        WHERE rs.roomId = #{roomId}
     </select>
 </mapper>
