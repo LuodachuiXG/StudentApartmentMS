@@ -1,6 +1,7 @@
 package com.example.studentapartmentms.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
  * 用户实体类
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements Serializable {
     /** 用户 ID **/
     private Integer userId;

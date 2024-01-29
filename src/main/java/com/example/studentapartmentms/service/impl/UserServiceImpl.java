@@ -27,7 +27,6 @@ import java.util.Map;
  * 用户服务接口实现类
  */
 @Service
-@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Resource

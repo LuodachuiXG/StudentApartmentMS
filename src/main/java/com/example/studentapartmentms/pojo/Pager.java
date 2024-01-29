@@ -2,6 +2,7 @@ package com.example.studentapartmentms.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  * 
  */
 @Data
-public class Pager<T> {
+public class Pager<T> implements Serializable {
     /** 当前页 **/
     private Integer page;
 

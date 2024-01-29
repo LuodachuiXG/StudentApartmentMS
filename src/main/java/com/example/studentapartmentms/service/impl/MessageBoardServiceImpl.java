@@ -6,6 +6,9 @@ import com.example.studentapartmentms.service.MessageBoardService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+/**
+ * 留言板服务接口实现类
+ */
 @Service
 public class MessageBoardServiceImpl implements MessageBoardService {
 

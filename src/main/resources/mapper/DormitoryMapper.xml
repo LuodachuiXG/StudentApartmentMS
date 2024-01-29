@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studentapartmentms.mapper.DormitoryMapper">
+    <!-- 获取所有宿舍 -->
+    <select id="allDormitory" resultType="Dormitory">
+        SELECT d.dormitoryId,
+               d.name,
+               COUNT(DISTINCT ru.userId) AS headCount
+        FROM dormitory d
+                 LEFT JOIN room r ON d.dormitoryId = r.dormitoryId
+                 LEFT JOIN room_user ru ON r.roomId = ru.roomId
+        GROUP BY d.dormitoryId
+    </select>
+
+
+    <!-- 根据宿舍 ID 获取宿舍管理员 -->
+    <select id="adminsByDormitoryId" resultType="User">
+        SELECT u.userId, u.id, u.name
+        FROM user u
+                 LEFT JOIN dormitory_admin da ON u.userId = da.userId
+        WHERE da.dormitoryId = #{dormitoryId}
+    </select>
+</mapper>

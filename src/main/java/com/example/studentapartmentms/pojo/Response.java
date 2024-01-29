@@ -2,12 +2,14 @@ package com.example.studentapartmentms.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 接口响应实体类
  * @param <T> 响应的数据类型
  */
 @Data
-public class Response<T> {
+public class Response<T> implements Serializable {
     /** 响应的 HTTP 代码 **/
     private int code;
 

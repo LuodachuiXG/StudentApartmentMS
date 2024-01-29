@@ -27,9 +27,7 @@ import java.util.Map;
 public class UserController {
 
 
-    /**
-     * 用户服务接口
-     **/
+    /** 用户服务接口 **/
     @Resource
     private UserService userService;
 
