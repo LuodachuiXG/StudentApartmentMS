@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS dormitory
 (
     dormitoryId INT AUTO_INCREMENT COMMENT '公寓 ID',
     name        VARCHAR(50) NOT NULL COMMENT '公寓名',
-    CONSTRAINT dormitoryId PRIMARY KEY (dormitoryId)
+    CONSTRAINT dormitoryId PRIMARY KEY (dormitoryId),
+    CONSTRAINT dormitory_name UNIQUE (name)
 ) COMMENT '宿舍表' COLLATE = utf8mb4_unicode_ci;
 
 # 宿舍管理员表

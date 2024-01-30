@@ -21,10 +21,18 @@
 
 
     <!-- 添加宿舍房间 -->
-    <insert id="addDormRooms" useGeneratedKeys="true">
+    <insert id="addRooms" useGeneratedKeys="true">
         INSERT INTO room(dormitoryId, name, headCount) VALUES
         <foreach collection="rooms" item="room" separator=",">
-            (#{dormId}, #{room.name}, #{room.headCount})
+            (#{room.dormitoryId}, #{room.name}, #{room.headCount})
+        </foreach>
+    </insert>
+
+    <!-- 添加宿舍房间住户 -->
+    <insert id="addRoomUsers" useGeneratedKeys="true">
+        INSERT INTO room_user(roomId, userId) VALUES
+        <foreach collection="roomUsers" item="roomUser" separator=",">
+            (#{roomUser.roomId}, #{roomUser.userId})
         </foreach>
     </insert>
 
@@ -59,11 +67,12 @@
         </foreach>
     </delete>
 
-    <!-- 根据宿舍管理员 ID 删除宿舍管理员 -->
-    <delete id="deleteDormAdminsByDormAdminIds">
-        DELETE FROM dormitory_admin WHERE dormitoryAdminId IN
-        <foreach collection="dormAdminIds" item="dormAdminId" open="(" separator="," close=")">
-            #{dormAdminId}
+    <!-- 根据宿舍管理员用户 ID 和宿舍 ID 删除宿舍管理员 -->
+    <delete id="deleteDormAdminsByDormIdAndUserIds">
+        DELETE FROM dormitory_admin WHERE dormitoryId = #{dormId} AND
+        userId IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
         </foreach>
     </delete>
 
@@ -107,9 +116,30 @@
         </foreach>
     </delete>
 
+    <!-- 根据宿舍 ID 集合删除这些宿舍所有房间的住户 -->
+    <delete id="deleteRoomUsersByDormIds">
+        DELETE
+        FROM room_user
+        WHERE roomId IN (SELECT roomId FROM room WHERE dormitoryId IN
+        <foreach collection="dormIds" item="dormId" separator=",">
+            #{dormId}
+        </foreach>
+        )
+    </delete>
+
+    <!-- 根据宿舍房间住户表 ID 删除宿舍房间住户 -->
+    <delete id="deleteRoomUsersByRoomUserIds">
+        DELETE
+        FROM room_user
+        WHERE roomUserId IN
+        <foreach collection="roomUserIds" item="roomUserId" separator=",">
+            #{roomUserId}
+        </foreach>
+    </delete>
+
 
     <!-- 获取所有宿舍 -->
-    <select id="allDorm" resultType="Dormitory">
+    <select id="dorms" resultType="Dormitory">
         SELECT d.dormitoryId,
                d.name,
                COUNT(DISTINCT ru.userId) AS headCount
@@ -129,7 +159,7 @@
     </select>
 
     <!-- 根据宿舍 ID 获取所有宿舍房间 -->
-    <select id="roomByDormId" resultType="Room">
+    <select id="roomsByDormId" resultType="Room">
         SELECT *
         FROM room
         WHERE dormitoryId = #{dormId}
@@ -139,12 +169,12 @@
     <select id="dormAdminByDormId" resultType="User">
         SELECT u.userId, u.id, u.name
         FROM user u
-        LEFT JOIN dormitory_admin da ON u.userId = da.userId
+                 LEFT JOIN dormitory_admin da ON u.userId = da.userId
         WHERE da.dormitoryId = #{dormId}
     </select>
 
     <!-- 根据宿舍房间 ID 获取所有宿舍房间居住用户 -->
-    <select id="roomUserByRoomId" resultType="User">
+    <select id="roomUsersByRoomId" resultType="User">
         SELECT u.userId,
                u.name,
                u.id,
@@ -156,5 +186,13 @@
         FROM user u
                  LEFT JOIN room_user rs ON rs.userId = u.userId
         WHERE rs.roomId = #{roomId}
+    </select>
+
+    <!-- 根据宿舍名获取宿舍 -->
+    <select id="dormsByNames" resultType="Dormitory">
+        SELECT * FROM dormitory WHERE name IN
+        <foreach collection="names" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
     </select>
 </mapper>

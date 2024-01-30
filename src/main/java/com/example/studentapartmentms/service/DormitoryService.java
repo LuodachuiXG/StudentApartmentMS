@@ -1,9 +1,6 @@
 package com.example.studentapartmentms.service;
 
-import com.example.studentapartmentms.pojo.Dormitory;
-import com.example.studentapartmentms.pojo.Pager;
-import com.example.studentapartmentms.pojo.Room;
-import com.example.studentapartmentms.pojo.User;
+import com.example.studentapartmentms.pojo.*;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ public interface DormitoryService {
      * @param page   当前页数
      * @param size   每页大小
      */
-    Pager<Room> dormRoomsByPage(Integer dormId, Integer page, Integer size);
+    Pager<Room> roomsByPage(Integer dormId, Integer page, Integer size);
 
     /**
      * 分页获取宿舍
@@ -33,6 +30,13 @@ public interface DormitoryService {
      * @param size 每页大小
      */
     Pager<Dormitory> dormsByPage(Integer page, Integer size);
+
+    /**
+     * 获取宿舍住户
+     *
+     * @param roomId 宿舍房间 ID
+     */
+    List<User> roomUsers(Integer roomId);
 
     /**
      * 添加宿舍
@@ -52,10 +56,9 @@ public interface DormitoryService {
     /**
      * 添加宿舍房间
      *
-     * @param dormId 宿舍 ID
      * @param rooms  房间集合
      */
-    Boolean addDormRooms(Integer dormId, List<Room> rooms);
+    Boolean addRooms(List<Room> rooms);
 
 
     /**
@@ -66,11 +69,12 @@ public interface DormitoryService {
     Boolean deleteDormsByDormIds(List<Integer> dormIds);
 
     /**
-     * 根据宿舍管理员 ID 删除宿舍管理员
+     * 根据宿舍管理员用户 ID 和宿舍 ID 删除宿舍管理员
      *
-     * @param dormAdminIds 宿舍管理员 ID 集合
+     * @param dormId 宿舍 ID
+     * @param userIds 用户 ID 集合
      */
-    Boolean deleteDormAdminsByDormAdminIds(List<Integer> dormAdminIds);
+    Boolean deleteDormAdminsByDormIdAndUserIds(Integer dormId, List<Integer> userIds);
 
 
     /**
@@ -81,11 +85,11 @@ public interface DormitoryService {
     Boolean deleteRoomsByRoomIds(List<Integer> roomIds);
 
     /**
-     * 根据用户 ID 删除宿舍房间住户
+     * 根据宿舍房间住户表 ID 删除宿舍房间住户
      *
-     * @param userIds 用户 ID 集合
+     * @param roomUserIds 宿舍房间住户表 ID 集合
      */
-    Boolean deleteRoomUsersByUserIds(List<Integer> userIds);
+    Boolean deleteRoomUsersByRoomUserIds(List<Integer> roomUserIds);
 
     /**
      * 修改宿舍信息
@@ -101,4 +105,12 @@ public interface DormitoryService {
      * @param room 宿舍房间实体类
      */
     Boolean updateRoom(Room room);
+
+
+    /**
+     * 添加宿舍房间住户
+     *
+     * @param roomUsers 宿舍房间用户实体类集合
+     */
+    Boolean addRoomUsers(List<RoomUser> roomUsers);
 }

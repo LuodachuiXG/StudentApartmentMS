@@ -2,6 +2,7 @@ package com.example.studentapartmentms.mapper;
 
 import com.example.studentapartmentms.pojo.Dormitory;
 import com.example.studentapartmentms.pojo.Room;
+import com.example.studentapartmentms.pojo.RoomUser;
 import com.example.studentapartmentms.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -32,10 +33,16 @@ public interface DormitoryMapper {
     /**
      * 添加宿舍房间
      *
-     * @param dormId 宿舍 ID
      * @param rooms  房间集合
      */
-    int addDormRooms(Integer dormId, List<Room> rooms);
+    int addRooms(List<Room> rooms);
+
+    /**
+     * 添加宿舍房间住户
+     *
+     * @param roomUsers  宿舍房间住户集合
+     */
+    int addRoomUsers(List<RoomUser> roomUsers);
 
 
     /**
@@ -53,11 +60,12 @@ public interface DormitoryMapper {
     int deleteDormAdminsByDormIds(List<Integer> dormIds);
 
     /**
-     * 根据宿舍管理员 ID 删除宿舍管理员
+     * 根据宿舍管理员用户 ID 和宿舍 ID 删除宿舍管理员
      *
-     * @param dormAdminIds 宿舍管理员 ID 集合
+     * @param dormId 宿舍 ID
+     * @param userIds 用户 ID 集合
      */
-    int deleteDormAdminsByDormAdminIds(List<Integer> dormAdminIds);
+    int deleteDormAdminsByDormIdAndUserIds(Integer dormId, List<Integer> userIds);
 
     /**
      * 根据用户 ID 删除宿舍管理员
@@ -95,6 +103,20 @@ public interface DormitoryMapper {
     int deleteRoomUsersByUserIds(List<Integer> userIds);
 
     /**
+     * 根据宿舍 ID 集合删除这些宿舍所有房间的住户
+     *
+     * @param dormIds 宿舍 ID 集合
+     */
+    int deleteRoomUsersByDormIds(List<Integer> dormIds);
+
+    /**
+     * 根据宿舍房间住户表 ID 删除宿舍房间住户
+     *
+     * @param roomUserIds 宿舍房间住户表 ID 集合
+     */
+    int deleteRoomUsersByRoomUserIds(List<Integer> roomUserIds);
+
+    /**
      * 修改宿舍信息
      *
      * @param dorm 宿舍实体类
@@ -112,10 +134,16 @@ public interface DormitoryMapper {
     /**
      * 获取所有宿舍
      * 注意：此 SQL 无法填充宿舍管理员字段 admins，需要二次查询手动填充
-     *
-     * @return 宿舍集合
      */
-    List<Dormitory> allDorm();
+    List<Dormitory> dorms();
+
+    /**
+     * 根据宿舍名获取宿舍
+     * 用于验证宿舍名是否存在
+     *
+     * @param names 宿舍名集合
+     */
+    List<Dormitory> dormsByNames(List<String> names);
 
     /**
      * 根据宿舍 ID 获取宿舍管理员
@@ -131,7 +159,7 @@ public interface DormitoryMapper {
      *
      * @param dormId 宿舍 ID
      */
-    List<Room> roomByDormId(Integer dormId);
+    List<Room> roomsByDormId(Integer dormId);
 
     /**
      * 根据宿舍 ID 获取所有宿舍管理员
@@ -145,5 +173,5 @@ public interface DormitoryMapper {
      *
      * @param roomId 房间 ID
      */
-    List<User> roomUserByRoomId(Integer roomId);
+    List<User> roomUsersByRoomId(Integer roomId);
 }
