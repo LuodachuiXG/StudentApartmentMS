@@ -3,7 +3,6 @@ package com.example.studentapartmentms.controller;
 import com.example.studentapartmentms.common.Utils;
 import com.example.studentapartmentms.pojo.*;
 import com.example.studentapartmentms.service.DormitoryService;
-import com.example.studentapartmentms.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +19,6 @@ import java.util.List;
 public class DormitoryController {
 
     /**
-     * 用户服务接口
-     **/
-    @Resource
-    private UserService userService;
-
-    /**
      * 宿舍服务接口
      **/
     @Resource
@@ -38,7 +31,7 @@ public class DormitoryController {
     @GetMapping
     public List<Dormitory> allDorm(HttpServletRequest request) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         // 返回所有宿舍
         return dormitoryService.dorms();
     }
@@ -57,7 +50,7 @@ public class DormitoryController {
             @PathVariable("size") Integer size
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         // 返回分页后的宿舍
         return dormitoryService.dormsByPage(page, size);
     }
@@ -74,7 +67,7 @@ public class DormitoryController {
             @RequestBody List<String> names
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("ADD_DORMS: " + names);
         return dormitoryService.addDorms(names);
     }
@@ -91,7 +84,7 @@ public class DormitoryController {
             @RequestBody List<Integer> dormIds
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("DEL_DORMS: " + dormIds);
         return dormitoryService.deleteDormsByDormIds(dormIds);
     }
@@ -108,7 +101,7 @@ public class DormitoryController {
             @RequestBody Dormitory dorm
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("UPDATE_DORM: " + dorm);
         return dormitoryService.updateDorm(dorm);
     }
@@ -126,7 +119,7 @@ public class DormitoryController {
             @RequestBody Dormitory dorm
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("ADD_DORM_ADMINS: " + dorm);
         List<Integer> adminUserIds = new ArrayList<>();
         dorm.getAdmins().forEach(admin -> adminUserIds.add(admin.getUserId()));
@@ -145,7 +138,7 @@ public class DormitoryController {
             @RequestBody Dormitory dorm
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("DEL_DORM_ADMINS: " + dorm);
         List<Integer> adminUserIds = new ArrayList<>();
         dorm.getAdmins().forEach(admin -> adminUserIds.add(admin.getUserId()));
@@ -165,7 +158,7 @@ public class DormitoryController {
             @RequestBody List<Room> rooms
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("ADD_ROOMS: " + rooms);
         return dormitoryService.addRooms(rooms);
     }
@@ -182,7 +175,7 @@ public class DormitoryController {
             @RequestBody List<Integer> roomIds
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("DEL_ROOMS: " + roomIds);
         return dormitoryService.deleteRoomsByRoomIds(roomIds);
     }
@@ -199,7 +192,7 @@ public class DormitoryController {
             @RequestBody Room room
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("UPDATE_ROOM: " + room);
         return dormitoryService.updateRoom(room);
     }
@@ -220,7 +213,7 @@ public class DormitoryController {
             @PathVariable("size") Integer size
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         return dormitoryService.roomsByPage(dormId, page, size);
     }
 
@@ -238,7 +231,7 @@ public class DormitoryController {
             @RequestBody List<RoomUser> roomUsers
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("ADD_ROOM_USERS: " + roomUsers);
         return dormitoryService.addRoomUsers(roomUsers);
     }
@@ -255,7 +248,7 @@ public class DormitoryController {
             @RequestBody List<Integer> roomUserIds
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("DEL_ROOM_USERS: " + roomUserIds);
         return dormitoryService.deleteRoomUsersByRoomUserIds(roomUserIds);
     }
@@ -272,7 +265,7 @@ public class DormitoryController {
             @PathVariable("roomId") Integer roomId
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         return dormitoryService.roomUsers(roomId);
     }
 

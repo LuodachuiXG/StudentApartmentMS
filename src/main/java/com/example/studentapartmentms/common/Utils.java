@@ -1,6 +1,7 @@
 package com.example.studentapartmentms.common;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.studentapartmentms.expcetion.MyException;
 import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
@@ -8,6 +9,7 @@ import com.example.studentapartmentms.service.UserService;
 import com.example.studentapartmentms.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.regex.Pattern;
 /**
  * 工具类
  */
+@Slf4j
 public class Utils {
     /**
      * 判断文本是否是数字
@@ -57,13 +60,12 @@ public class Utils {
      * @param role    用户角色
      */
     public static void isRole(
-            UserService userService,
             HttpServletRequest request,
             RoleEnum role
     ) {
         // 根据 Token 获取用户
         String token = request.getHeader("token");
-        isRole(userService, token, role);
+        isRole(token, role);
     }
 
     /**
@@ -74,15 +76,16 @@ public class Utils {
      * @param role  用户角色
      */
     public static void isRole(
-            UserService userService,
             String token,
             RoleEnum role
     ) {
-        // 根据 Token 获取用户
-        User user = userService.userByToken(token);
+        // 从 Token 获取用户对应身份
+        Map<String, String> claims = JWTUtils.getClaims(token);
+        String roleStr = claims.get("role");
+
         // 检查当前用户是否指定角色
-        if (user.getRole() != role) {
-            throw new JWTVerificationException("无权访问受保护资源");
+        if (!roleStr.equals(role.toString())) {
+            throw new MyException("无权访问受保护资源");
         }
     }
 
@@ -96,6 +99,7 @@ public class Utils {
         Map<String, String> claims = JWTUtils.getClaims(token);
         // 获取当前 Token 绑定的用户 ID
         String userId = claims.get("userId");
+
         if (!isNumber(userId)) {
             // userId 不是数字
             throw new JWTVerificationException("Token 异常");

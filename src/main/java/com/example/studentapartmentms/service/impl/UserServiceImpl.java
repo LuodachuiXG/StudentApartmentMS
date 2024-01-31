@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 添加用户
+     *
      * @param user 用户实体类
      * @param role 用户身份
      * @return 注册成功返回用户信息，否则返回 null
@@ -77,8 +78,9 @@ public class UserServiceImpl implements UserService {
     /**
      * 删除用户
      * 管理员只可以删除学生。删除管理员需要自己注销。
+     *
      * @param requestUserId 调用者用户 ID
-     * @param userIds 用户 ID 集合
+     * @param userIds       用户 ID 集合
      * @return 删除成功返回 true
      */
     @Override
@@ -111,8 +113,9 @@ public class UserServiceImpl implements UserService {
      * 修改用户
      * 管理员不能修改其他管理员信息，但可以修改学生信息
      * 学生只能修改自己的信息
+     *
      * @param requestUserId 请求调用者 ID
-     * @param user 用户实体类
+     * @param user          用户实体类
      * @return 修改成功返回 true
      */
     @Override
@@ -178,9 +181,10 @@ public class UserServiceImpl implements UserService {
     /**
      * 修改用户密码
      * 此接口只能修改密码的用户本人调用
+     *
      * @param requestUserId 请求者用户 ID
-     * @param oldPwd 旧密码
-     * @param newPwd 新密码
+     * @param oldPwd        旧密码
+     * @param newPwd        新密码
      * @return 修改成功返回 true
      */
     @Override
@@ -267,7 +271,7 @@ public class UserServiceImpl implements UserService {
      * 只有管理员可以获取所有用户信息
      * 关键词：工号（学号）、姓名、电话
      *
-     * @param key 查询的关键词
+     * @param key  查询的关键词
      * @param page 当前页数
      * @param size 每页大小
      */
@@ -302,8 +306,11 @@ public class UserServiceImpl implements UserService {
             throw new MyException("工号（学号）或密码错误");
         }
 
-        // 密码正确，生成与用户 ID 绑定的 Token
-        String token = JWTUtils.generateToken(Map.of("userId", user.getUserId().toString()));
+        // 密码正确，生成与用户 ID 和身份绑定的 Token
+        String token = JWTUtils.generateToken(
+                Map.of("userId", user.getUserId().toString(),
+                        "role", user.getRole().toString())
+        );
 
         // 修改用户最后登录时间
         updateLastLogin(user.getUserId());

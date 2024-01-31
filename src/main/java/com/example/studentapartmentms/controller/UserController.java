@@ -63,7 +63,12 @@ public class UserController {
      * @return 添加成功后返回学生信息，否则返回 null
      */
     @PostMapping("/student")
-    public User addStudent(@RequestBody User user) {
+    public User addStudent(
+            HttpServletRequest request,
+            @RequestBody User user
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(request, RoleEnum.ADMIN);
         log.info("ADD_STUDENT: " + user.getId());
         return userService.addUser(user, RoleEnum.STUDENT);
     }
@@ -82,7 +87,7 @@ public class UserController {
             @RequestBody List<Integer> userIds
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         // 获取调用者用户 ID
         int requestUserId = Utils.getUserIdByRequest(request);
         log.info("DELETE_USER: " + userIds.toString());
@@ -150,7 +155,7 @@ public class UserController {
     @GetMapping
     public List<User> allUser(HttpServletRequest request) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         // 返回所有用户信息
         return userService.allUser();
     }
@@ -169,7 +174,7 @@ public class UserController {
             @PathVariable("size") Integer size
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         // 返回所有用户信息
         return userService.userByPage(page, size);
     }
@@ -191,7 +196,7 @@ public class UserController {
             @PathVariable("size") Integer size
     ) {
         // 检查当前用户是否是管理员
-        Utils.isRole(userService, request, RoleEnum.ADMIN);
+        Utils.isRole(request, RoleEnum.ADMIN);
         // 返回所有用户信息
         return userService.userByKeyAndPage(key, page, size);
     }
