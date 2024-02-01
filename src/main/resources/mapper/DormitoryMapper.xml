@@ -142,7 +142,7 @@
     <select id="dorms" resultType="Dormitory">
         SELECT d.dormitoryId,
                d.name,
-               SUM(r.headCount) AS totalBeds,
+               COALESCE(SUM(r.headCount), 0) AS totalBeds,
                COUNT(DISTINCT ru.userId) AS headCount
         FROM dormitory d
                  LEFT JOIN room r ON d.dormitoryId = r.dormitoryId
