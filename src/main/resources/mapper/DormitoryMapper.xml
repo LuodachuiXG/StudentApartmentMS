@@ -22,9 +22,9 @@
 
     <!-- 添加宿舍房间 -->
     <insert id="addRooms" useGeneratedKeys="true">
-        INSERT INTO room(dormitoryId, name, headCount) VALUES
+        INSERT INTO room(dormitoryId, name, totalBeds) VALUES
         <foreach collection="rooms" item="room" separator=",">
-            (#{room.dormitoryId}, #{room.name}, #{room.headCount})
+            (#{room.dormitoryId}, #{room.name}, #{room.totalBeds})
         </foreach>
     </insert>
 
@@ -47,7 +47,7 @@
     <update id="updateRoom">
         UPDATE room
         SET name      = #{room.name},
-            headCount = #{room.headCount}
+            totalBeds = #{room.totalBeds}
         WHERE roomId = #{room.roomId}
     </update>
 
@@ -142,7 +142,7 @@
     <select id="dorms" resultType="Dormitory">
         SELECT d.dormitoryId,
                d.name,
-               COALESCE(SUM(r.headCount), 0) AS totalBeds,
+               COALESCE(SUM(r.totalBeds), 0) AS totalBeds,
                COUNT(DISTINCT ru.userId) AS headCount
         FROM dormitory d
                  LEFT JOIN room r ON d.dormitoryId = r.dormitoryId

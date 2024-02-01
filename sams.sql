@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS room
     roomId      INT AUTO_INCREMENT COMMENT '宿舍房间 ID',
     dormitoryId INT         NOT NULL COMMENT '宿舍 ID',
     name        VARCHAR(50) NOT NULL COMMENT '宿舍房间名称',
-    headCount   INT         NOT NULL COMMENT '宿舍房间人数',
+    totalBeds   INT         NOT NULL COMMENT '宿舍房间总床位',
     CONSTRAINT roomId PRIMARY KEY (roomId),
     CONSTRAINT room_dormitoryId
         FOREIGN KEY  (dormitoryId) REFERENCES dormitory (dormitoryId)

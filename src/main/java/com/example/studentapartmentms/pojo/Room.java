@@ -18,6 +18,9 @@ public class Room implements Serializable {
     /** 房间名 **/
     private String name;
 
-    /** 房间可容纳人数 **/
+    /** 房间已入住人数 **/
     private Integer headCount;
+
+    /** 房间总床位 **/
+    private Integer totalBeds;
 }
