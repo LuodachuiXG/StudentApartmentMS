@@ -20,7 +20,7 @@ public interface DormitoryMapper {
      *
      * @param names 宿舍名集合
      */
-    int addDorms(List<String> names);
+    int addDorms(@Param("names") List<String> names);
 
     /**
      * 添加宿舍管理员
@@ -28,21 +28,22 @@ public interface DormitoryMapper {
      * @param dormId  宿舍 ID
      * @param userIds 用户 ID 集合
      */
-    int addDormAdmins(Integer dormId, List<Integer> userIds);
+    int addDormAdmins(@Param("dormId") Integer dormId,
+                      @Param("userIds") List<Integer> userIds);
 
     /**
      * 添加宿舍房间
      *
-     * @param rooms  房间集合
+     * @param rooms 房间集合
      */
-    int addRooms(List<Room> rooms);
+    int addRooms(@Param("rooms") List<Room> rooms);
 
     /**
      * 添加宿舍房间住户
      *
-     * @param roomUsers  宿舍房间住户集合
+     * @param roomUsers 宿舍房间住户集合
      */
-    int addRoomUsers(List<RoomUser> roomUsers);
+    int addRoomUsers(@Param("roomUsers") List<RoomUser> roomUsers);
 
 
     /**
@@ -50,85 +51,86 @@ public interface DormitoryMapper {
      *
      * @param dormIds 宿舍 ID 集合
      */
-    int deleteDormsByDormIds(List<Integer> dormIds);
+    int deleteDormsByDormIds(@Param("dormIds") List<Integer> dormIds);
 
     /**
      * 根据宿舍 ID 删除宿舍管理员
      *
      * @param dormIds 宿舍 ID 集合
      */
-    int deleteDormAdminsByDormIds(List<Integer> dormIds);
+    int deleteDormAdminsByDormIds(@Param("dormIds") List<Integer> dormIds);
 
     /**
      * 根据宿舍管理员用户 ID 和宿舍 ID 删除宿舍管理员
      *
-     * @param dormId 宿舍 ID
+     * @param dormId  宿舍 ID
      * @param userIds 用户 ID 集合
      */
-    int deleteDormAdminsByDormIdAndUserIds(Integer dormId, List<Integer> userIds);
+    int deleteDormAdminsByDormIdAndUserIds(@Param("dormId") Integer dormId,
+                                           @Param("userIds") List<Integer> userIds);
 
     /**
      * 根据用户 ID 删除宿舍管理员
      *
      * @param userIds 用户 ID 集合
      */
-    int deleteDormAdminsByUserIds(List<Integer> userIds);
+    int deleteDormAdminsByUserIds(@Param("userIds") List<Integer> userIds);
 
     /**
      * 根据宿舍房间 ID 删除宿舍房间
      *
      * @param roomIds 宿舍房间 ID 集合
      */
-    int deleteRoomsByRoomIds(List<Integer> roomIds);
+    int deleteRoomsByRoomIds(@Param("roomIds") List<Integer> roomIds);
 
     /**
      * 根据宿舍 ID 删除宿舍房间
      *
      * @param dormIds 宿舍 ID 集合
      */
-    int deleteRoomsByDormIds(List<Integer> dormIds);
+    int deleteRoomsByDormIds(@Param("dormIds") List<Integer> dormIds);
 
     /**
      * 根据宿舍房间 ID 删除宿舍房间住户
      *
      * @param roomIds 宿舍房间 ID 集合
      */
-    int deleteRoomUsersByRoomIds(List<Integer> roomIds);
+    int deleteRoomUsersByRoomIds(@Param("roomIds") List<Integer> roomIds);
 
     /**
      * 根据用户 ID 删除宿舍房间住户
      *
      * @param userIds 用户 ID 集合
      */
-    int deleteRoomUsersByUserIds(List<Integer> userIds);
+    int deleteRoomUsersByUserIds(@Param("userIds") List<Integer> userIds);
 
     /**
      * 根据宿舍 ID 集合删除这些宿舍所有房间的住户
      *
      * @param dormIds 宿舍 ID 集合
      */
-    int deleteRoomUsersByDormIds(List<Integer> dormIds);
+    int deleteRoomUsersByDormIds(@Param("dormIds") List<Integer> dormIds);
 
     /**
      * 根据宿舍房间住户表 ID 删除宿舍房间住户
      *
      * @param roomUserIds 宿舍房间住户表 ID 集合
      */
-    int deleteRoomUsersByRoomUserIds(List<Integer> roomUserIds);
+    int deleteRoomUsersByRoomUserIds(@Param("roomUserIds") List<Integer> roomUserIds);
 
     /**
      * 修改宿舍信息
      *
      * @param dorm 宿舍实体类
      */
-    int updateDorm(Dormitory dorm);
+    int updateDorm(@Param("dorm") Dormitory dorm);
 
     /**
      * 修改宿舍房间信息
      *
      * @param room 宿舍房间实体类
      */
-    int updateRoom(Room room);
+    int updateRoom(@Param("room") Room room);
 
 
     /**
@@ -143,7 +145,7 @@ public interface DormitoryMapper {
      *
      * @param names 宿舍名集合
      */
-    List<Dormitory> dormsByNames(List<String> names);
+    List<Dormitory> dormsByNames(@Param("names") List<String> names);
 
     /**
      * 根据宿舍 ID 获取宿舍管理员
@@ -159,19 +161,19 @@ public interface DormitoryMapper {
      *
      * @param dormId 宿舍 ID
      */
-    List<Room> roomsByDormId(Integer dormId);
+    List<Room> roomsByDormId(@Param("dormId") Integer dormId);
 
     /**
      * 根据宿舍 ID 获取所有宿舍管理员
      *
      * @param dormId 宿舍 ID
      */
-    List<User> dormAdminByDormId(Integer dormId);
+    List<User> dormAdminByDormId(@Param("dormId") Integer dormId);
 
     /**
      * 根据宿舍房间 ID 获取所有宿舍房间居住用户
      *
      * @param roomId 房间 ID
      */
-    List<User> roomUsersByRoomId(Integer roomId);
+    List<User> roomUsersByRoomId(@Param("roomId") Integer roomId);
 }

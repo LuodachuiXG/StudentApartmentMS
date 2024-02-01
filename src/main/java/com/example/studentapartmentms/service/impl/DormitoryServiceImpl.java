@@ -176,6 +176,16 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean updateDorm(Dormitory dorm) {
+        // 判断宿舍名是否已经存在
+        List<Dormitory> dorms = dormitoryMapper.dormsByNames(List.of(dorm.getName()));
+        // 按宿舍名查找结果不为空
+        if (!dorms.isEmpty()) {
+            // 如果查询结果大小为 1，且该宿舍 ID 不是当前的宿舍 ID 的话，证明宿舍名已存在
+            if (dorms.size() == 1 && !dorms.get(0).getDormitoryId().equals(dorm.getDormitoryId())) {
+                // 宿舍名已经存在
+                throw new MyException("宿舍名：" + dorm.getName() + " 已存在");
+            }
+        }
         return dormitoryMapper.updateDorm(dorm) > 0;
     }
 
