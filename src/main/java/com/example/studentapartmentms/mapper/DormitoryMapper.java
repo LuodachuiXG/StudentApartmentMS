@@ -164,6 +164,15 @@ public interface DormitoryMapper {
     List<Room> roomsByDormId(@Param("dormId") Integer dormId);
 
     /**
+     * 根据宿舍 ID 和宿舍房间名集合获取所有宿舍房间
+     *
+     * @param dormId    宿舍 ID
+     * @param roomNames 宿舍房间名集合
+     */
+    List<Room> roomsByDormIdAndRoomNames(@Param("dormId") Integer dormId,
+                                         @Param("roomNames") List<String> roomNames);
+
+    /**
      * 根据宿舍 ID 获取所有宿舍管理员
      *
      * @param dormId 宿舍 ID

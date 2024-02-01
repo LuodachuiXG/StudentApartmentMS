@@ -9,6 +9,7 @@ import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,7 +93,7 @@ public class DormitoryServiceImpl implements DormitoryService {
         // 待添加宿舍名有重复
         if (dorms != null && !dorms.isEmpty()) {
             StringBuilder existName = new StringBuilder();
-            dorms.forEach( name -> {
+            dorms.forEach(name -> {
                 existName.append(names).append(" ");
             });
             throw new MyException("宿舍名：" + existName + "已存在");
@@ -114,10 +115,20 @@ public class DormitoryServiceImpl implements DormitoryService {
     /**
      * 添加宿舍房间
      *
-     * @param rooms  房间集合
+     * @param rooms 房间集合
      */
     @Override
     public Boolean addRooms(List<Room> rooms) {
+        // 先判断当前宿舍楼是否已经存在相同名称的宿舍房间
+        List<String> roomNames = new ArrayList<>();
+        rooms.forEach(room -> roomNames.add(room.getName()));
+        List<Room> selectRes = dormitoryMapper.roomsByDormIdAndRoomNames(rooms.get(0).getDormitoryId(), roomNames);
+        if (selectRes != null && !selectRes.isEmpty()) {
+            // 有重名宿舍房间，获取已经存在的房间名
+            StringBuilder existRoomNames = new StringBuilder();
+            selectRes.forEach(room -> existRoomNames.append(room.getName()).append(" "));
+            throw new MyException("房间名：[ " + existRoomNames + "]已经存在");
+        }
         return dormitoryMapper.addRooms(rooms) > 0;
     }
 
@@ -141,7 +152,7 @@ public class DormitoryServiceImpl implements DormitoryService {
     /**
      * 根据宿舍管理员用户 ID 和宿舍 ID 删除宿舍管理员
      *
-     * @param dormId 宿舍 ID
+     * @param dormId  宿舍 ID
      * @param userIds 用户 ID 集合
      */
     @Override
