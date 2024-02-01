@@ -18,7 +18,10 @@ public class Dormitory implements Serializable {
     /** 宿舍名 */
     private String name;
 
-    /** 宿舍人数 **/
+    /** 宿舍总床位 **/
+    private Integer totalBeds;
+
+    /** 宿舍已入住人数 **/
     private Integer headCount;
 
     /** 宿舍管理员，只包含 name 和 id 字段**/
