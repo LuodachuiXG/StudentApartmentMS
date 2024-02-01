@@ -3,6 +3,7 @@ package com.example.studentapartmentms.pojo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 宿舍房间实体类
@@ -23,4 +24,7 @@ public class Room implements Serializable {
 
     /** 房间总床位 **/
     private Integer totalBeds;
+
+    /** 房间住户 **/
+    private List<User> users;
 }

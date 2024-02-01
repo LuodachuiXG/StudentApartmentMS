@@ -53,6 +53,11 @@ public class DormitoryServiceImpl implements DormitoryService {
         PageHelper.startPage(page, size);
         // 此处的获取所有宿舍的 SQL 已经被加上了分页代码
         List<Room> list = dormitoryMapper.roomsByDormId(dormId);
+        // 二次查询每个房间的住户
+        list.forEach(room -> {
+            List<User> users = dormitoryMapper.roomUsersByRoomId(room.getRoomId());
+            room.setUsers(users);
+        });
         return Utils.getPager(list, page, size);
     }
 
@@ -167,6 +172,9 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean deleteRoomsByRoomIds(List<Integer> roomIds) {
+        // 首先根据房间 ID 删除当前房间的所有住户
+        dormitoryMapper.deleteRoomUsersByRoomIds(roomIds);
+        // 删除房间
         return dormitoryMapper.deleteRoomsByRoomIds(roomIds) > 0;
     }
 
