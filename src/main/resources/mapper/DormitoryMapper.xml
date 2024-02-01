@@ -121,7 +121,7 @@
         DELETE
         FROM room_user
         WHERE roomId IN (SELECT roomId FROM room WHERE dormitoryId IN
-        <foreach collection="dormIds" item="dormId" separator=",">
+        <foreach collection="dormIds" item="dormId" open="(" separator="," close=")">
             #{dormId}
         </foreach>
         )
