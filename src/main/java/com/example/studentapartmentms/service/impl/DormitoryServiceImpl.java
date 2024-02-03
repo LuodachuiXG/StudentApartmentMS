@@ -227,6 +227,18 @@ public class DormitoryServiceImpl implements DormitoryService {
         if (rs != null && !rs.isEmpty() && !rs.get(0).getRoomId().equals(room.getRoomId())) {
             throw new MyException("宿舍房间：" + room.getName() + " 已经存在");
         }
+
+        // 判断房间总床位数量是否非法
+        if (room.getTotalBeds() <= 0) {
+            throw new MyException("房间总床位值非法");
+        }
+
+        // 检查房间总床位大小是否小于已经入住学生数量
+        List<User> students = roomUsers(room.getRoomId());
+        if (room.getTotalBeds() < students.size()) {
+            throw new MyException("总床位数不能小于已经入住学生数");
+        }
+
         // 修改宿舍房间
         return dormitoryMapper.updateRoom(room) > 0;
     }
