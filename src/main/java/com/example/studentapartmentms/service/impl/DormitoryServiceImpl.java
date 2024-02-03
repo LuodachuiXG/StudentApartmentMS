@@ -126,7 +126,14 @@ public class DormitoryServiceImpl implements DormitoryService {
     public Boolean addRooms(List<Room> rooms) {
         // 先判断当前宿舍楼是否已经存在相同名称的宿舍房间
         List<String> roomNames = new ArrayList<>();
-        rooms.forEach(room -> roomNames.add(room.getName()));
+        rooms.forEach(room -> {
+            // 将房间名加入待检查集合
+            roomNames.add(room.getName());
+            // 同时判断是否有房间总床位非法
+            if (room.getTotalBeds() <= 0) {
+                throw new MyException("房间总床位值非法");
+            }
+        });
         List<Room> selectRes = dormitoryMapper.roomsByDormIdAndRoomNames(rooms.get(0).getDormitoryId(), roomNames);
         if (selectRes != null && !selectRes.isEmpty()) {
             // 有重名宿舍房间，获取已经存在的房间名
@@ -215,6 +222,12 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean updateRoom(Room room) {
+        // 修改房间信息前检查房间名是否已经存在
+        List<Room> rs = dormitoryMapper.roomsByDormIdAndRoomNames(room.getDormitoryId(), List.of(room.getName()));
+        if (rs != null && !rs.isEmpty() && !rs.get(0).getRoomId().equals(room.getRoomId())) {
+            throw new MyException("宿舍房间：" + room.getName() + " 已经存在");
+        }
+        // 修改宿舍房间
         return dormitoryMapper.updateRoom(room) > 0;
     }
 

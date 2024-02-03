@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
 @MapperScan("com.example.studentapartmentms.mapper")
-@ConfigurationPropertiesScan("com.example.studentapartmentms.common")
+@ConfigurationPropertiesScan("com.example.studentapartmentms.config")
 public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
