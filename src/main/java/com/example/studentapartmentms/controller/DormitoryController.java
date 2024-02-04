@@ -37,6 +37,18 @@ public class DormitoryController {
     }
 
     /**
+     * 学生获取自己被分配的宿舍房间
+     *
+     * @param userId 学生用户 ID
+     */
+    @GetMapping("/student/{userId}")
+    public StudentRoomInfo roomByStudentUserId(@PathVariable("userId") Integer userId) {
+        // 返回当前学生入住的宿舍
+        return dormitoryService.studentRoomByUserId(userId);
+    }
+
+
+    /**
      * 分页获取宿舍
      * 仅管理员
      *

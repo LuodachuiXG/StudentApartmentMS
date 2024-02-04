@@ -194,6 +194,13 @@
         GROUP BY d.dormitoryId
     </select>
 
+    <!-- 根据宿舍楼 ID 获取宿舍 -->
+    <select id="dormByDormId" resultType="Dormitory">
+        SELECT *
+        FROM dormitory
+        WHERE dormitoryId = #{dormId}
+    </select>
+
     <!-- 根据宿舍房间 ID 获取所有宿舍房间居住用户 -->
     <select id="roomUsersByRoomId" resultType="User">
         SELECT u.userId,
@@ -237,6 +244,8 @@
 
     <!-- 根据宿舍房间 ID 获取宿舍房间 -->
     <select id="roomByRoomId" resultType="Room">
-        SELECT * FROM room WHERE roomId = #{roomId}
+        SELECT *
+        FROM room
+        WHERE roomId = #{roomId}
     </select>
 </mapper>

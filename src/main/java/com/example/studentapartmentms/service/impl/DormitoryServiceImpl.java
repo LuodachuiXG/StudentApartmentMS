@@ -118,6 +118,38 @@ public class DormitoryServiceImpl implements DormitoryService {
     }
 
     /**
+     * 学生获取自己被分配的宿舍房间
+     *
+     * @param userId 学生用户 ID
+     */
+    @Override
+    public StudentRoomInfo studentRoomByUserId(Integer userId) {
+        StudentRoomInfo sri = new StudentRoomInfo();
+        // 获取学生入住信息
+        Room room = dormitoryMapper.roomByUserId(userId);
+        if (room != null) {
+            // 获取宿舍管理员
+            List<User> admins = adminsByDormId(room.getDormitoryId());
+            // 获取宿舍楼名
+            String dormName = dormitoryMapper.dormByDormId(room.getDormitoryId()).getName();
+            // 获取室友
+            List<User> roomUsers = roomUsers(room.getRoomId());
+            // 删除自己
+            roomUsers.removeIf(user -> user.getUserId().equals(userId));
+
+            sri.setRoomName(room.getName());
+            sri.setAdmins(admins);
+            sri.setDormName(dormName);
+            sri.setRoomMates(roomUsers);
+            sri.setTotalBeds(room.getTotalBeds());
+            return sri;
+        } else {
+            // 学生还没有入住信息
+            return null;
+        }
+    }
+
+    /**
      * 添加宿舍
      *
      * @param names 宿舍名集合
