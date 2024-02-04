@@ -244,12 +244,17 @@ public class DormitoryServiceImpl implements DormitoryService {
     }
 
     /**
-     * 添加宿舍房间住户
+     * 修改宿舍房间住户
      *
-     * @param roomUsers 宿舍房间用户实体类集合
+     * @param roomUser 宿舍房间用户实体类
      */
     @Override
-    public Boolean addRoomUsers(List<RoomUser> roomUsers) {
-        return dormitoryMapper.addRoomUsers(roomUsers) > 0;
+    public Boolean updateRoomUsers(RoomUser roomUser) {
+        // 根据当前传过来的新的入住的用户，删除当前用户其他入住数据
+        dormitoryMapper.deleteRoomUsersByUserIds(roomUser.getUserIds());
+        // 删除当前宿舍所有住户
+        dormitoryMapper.deleteRoomUsersByRoomIds(List.of(roomUser.getRoomId()));
+        // 添加宿舍房间住户
+        return dormitoryMapper.addRoomUsers(roomUser) > 0;
     }
 }

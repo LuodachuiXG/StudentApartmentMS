@@ -46,6 +46,16 @@
            OR phone LIKE '%${key}%'
     </select>
 
+    <!-- 获取所有学生用户（只有 userId、id、name 三个字段） -->
+    <select id="studentIdAndNameByKey" resultType="User">
+        SELECT userId, id, name
+        FROM user
+        WHERE (id LIKE '%${key}%'
+            OR name LIKE '%${key}%'
+            OR phone LIKE '%${key}%')
+          AND role = 'STUDENT'
+    </select>
+
 
     <!-- 添加用户 -->
     <insert id="addUser" useGeneratedKeys="true">

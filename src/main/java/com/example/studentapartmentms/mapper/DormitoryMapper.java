@@ -41,9 +41,9 @@ public interface DormitoryMapper {
     /**
      * 添加宿舍房间住户
      *
-     * @param roomUsers 宿舍房间住户集合
+     * @param roomUser 宿舍房间住户实体类
      */
-    int addRoomUsers(@Param("roomUsers") List<RoomUser> roomUsers);
+    int addRoomUsers(@Param("roomUser") RoomUser roomUser);
 
 
     /**
@@ -91,7 +91,7 @@ public interface DormitoryMapper {
     int deleteRoomsByDormIds(@Param("dormIds") List<Integer> dormIds);
 
     /**
-     * 根据宿舍房间 ID 删除宿舍房间住户
+     * 根据宿舍房间 ID 集合删除宿舍房间住户
      *
      * @param roomIds 宿舍房间 ID 集合
      */

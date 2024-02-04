@@ -220,20 +220,20 @@ public class DormitoryController {
 
 
     /**
-     * 添加宿舍房间住户
+     * 修改宿舍房间住户
      * 仅管理员
      *
-     * @param roomUsers 宿舍房间住户实体类集合
+     * @param roomUser 宿舍房间住户实体类
      */
-    @PostMapping("/room_user")
-    public Boolean addRoomUsers(
+    @PutMapping("/room_user")
+    public Boolean updateRoomUsers(
             HttpServletRequest request,
-            @RequestBody List<RoomUser> roomUsers
+            @RequestBody RoomUser roomUser
     ) {
         // 检查当前用户是否是管理员
         Utils.isRole(request, RoleEnum.ADMIN);
-        log.info("ADD_ROOM_USERS: " + roomUsers);
-        return dormitoryService.addRoomUsers(roomUsers);
+        log.info("UPDATE_ROOM_USERS: " + roomUser);
+        return dormitoryService.updateRoomUsers(roomUser);
     }
 
     /**

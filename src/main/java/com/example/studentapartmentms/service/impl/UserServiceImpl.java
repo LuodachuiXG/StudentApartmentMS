@@ -284,6 +284,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 获取所有学生用户（只有 userId、id、name 三个字段）
+     * 关键词：学号、姓名、电话
+     *
+     * @param key  查询的关键词
+     */
+    @Override
+    public List<User> studentIdAndNameByKey(String key) {
+        return userMapper.studentIdAndNameByKey(key);
+    }
+
+    /**
      * 用户登录
      *
      * @param id       工号（学号）

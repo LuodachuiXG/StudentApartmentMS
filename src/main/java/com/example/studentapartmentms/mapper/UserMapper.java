@@ -36,7 +36,7 @@ public interface UserMapper {
     /**
      * 修改用户密码
      *
-     * @param userId 用户 ID
+     * @param userId   用户 ID
      * @param password 新密码
      */
     int updateUserPassword(@Param("userId") Integer userId,
@@ -70,6 +70,14 @@ public interface UserMapper {
      * @param key 查询的关键词
      */
     List<User> userByKey(@Param("key") String key);
+
+    /**
+     * 获取所有学生用户（只有 userId、id、name 三个字段）
+     * 关键词：学号、姓名、电话
+     *
+     * @param key 查询的关键词
+     */
+    List<User> studentIdAndNameByKey(String key);
 
 
     /**

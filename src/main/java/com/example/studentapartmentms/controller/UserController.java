@@ -1,9 +1,7 @@
 package com.example.studentapartmentms.controller;
 
 
-import com.example.studentapartmentms.common.JWTUtils;
 import com.example.studentapartmentms.common.Utils;
-import com.example.studentapartmentms.expcetion.MyException;
 import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.pojo.User;
@@ -12,10 +10,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 import java.util.Map;
@@ -199,6 +195,24 @@ public class UserController {
         Utils.isRole(request, RoleEnum.ADMIN);
         // 返回所有用户信息
         return userService.userByKeyAndPage(key, page, size);
+    }
+
+    /**
+     * 获取所有学生用户（只有 userId、id、name 三个字段）
+     * 仅管路员
+     * 关键词：学号、姓名、电话
+     *
+     * @param key 查询的关键词
+     */
+    @GetMapping("/student/{key}")
+    public List<User> studentByKey(
+            HttpServletRequest request,
+            @PathVariable("key") String key
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(request, RoleEnum.ADMIN);
+        // 返回所有用户信息
+        return userService.studentIdAndNameByKey(key);
     }
 
 }

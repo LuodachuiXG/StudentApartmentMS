@@ -84,7 +84,7 @@ public interface UserService {
 
     /**
      * 分页和关键词获取用户信息
-     * 只有管理员可以获取所有用户信息
+     * 仅管路员
      * 关键词：工号（学号）、姓名、电话
      *
      * @param key 查询的关键词
@@ -92,6 +92,14 @@ public interface UserService {
      * @param size 每页大小
      */
     Pager<User> userByKeyAndPage(String key, Integer page, Integer size);
+
+    /**
+     * 获取所有学生用户（只有 userId、id、name 三个字段）
+     * 关键词：学号、姓名、电话
+     *
+     * @param key  查询的关键词
+     */
+    List<User> studentIdAndNameByKey(String key);
 
     /**
      * 根据 ID 获取用户

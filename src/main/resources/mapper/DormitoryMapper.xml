@@ -31,8 +31,8 @@
     <!-- 添加宿舍房间住户 -->
     <insert id="addRoomUsers" useGeneratedKeys="true">
         INSERT INTO room_user(roomId, userId) VALUES
-        <foreach collection="roomUsers" item="roomUser" separator=",">
-            (#{roomUser.roomId}, #{roomUser.userId})
+        <foreach collection="roomUser.userIds" item="userIds" separator=",">
+            (#{roomUser.roomId}, #{userIds})
         </foreach>
     </insert>
 

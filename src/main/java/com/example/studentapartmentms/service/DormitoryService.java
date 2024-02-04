@@ -108,9 +108,9 @@ public interface DormitoryService {
 
 
     /**
-     * 添加宿舍房间住户
+     * 修改宿舍房间住户
      *
-     * @param roomUsers 宿舍房间用户实体类集合
+     * @param roomUser 宿舍房间用户实体类
      */
-    Boolean addRoomUsers(List<RoomUser> roomUsers);
+    Boolean updateRoomUsers(RoomUser roomUser);
 }
