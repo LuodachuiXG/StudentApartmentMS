@@ -15,6 +15,13 @@ public interface DormitoryService {
     List<Dormitory> dorms();
 
     /**
+     * 根据管理员用户 ID 获取管理的宿舍信息
+     *
+     * @param userId 管理员用户 ID
+     */
+    List<Dormitory> dormsByAdmin(Integer userId);
+
+    /**
      * 分页获取所有宿舍房间
      *
      * @param dormId 宿舍 ID
@@ -22,6 +29,21 @@ public interface DormitoryService {
      * @param size   每页大小
      */
     Pager<Room> roomsByPage(Integer dormId, Integer page, Integer size);
+
+    /**
+     * 根据宿舍 ID 获取所有宿舍房间
+     *
+     * @param dormId 宿舍 ID
+     */
+    List<Room> roomsByDormId(Integer dormId);
+
+    /**
+     * 根据用户 ID 获取所住的宿舍信息
+     * 仅管理员
+     *
+     * @param userId 用户 ID
+     */
+    Room roomByUserId(Integer userId);
 
     /**
      * 分页获取宿舍
@@ -54,9 +76,16 @@ public interface DormitoryService {
     Boolean addDormAdmins(Integer dormId, List<Integer> userIds);
 
     /**
+     * 根据宿舍楼 ID 获取所有管理员
+     *
+     * @param dormId 宿舍楼 ID
+     */
+    List<User> adminsByDormId(Integer dormId);
+
+    /**
      * 添加宿舍房间
      *
-     * @param rooms  房间集合
+     * @param rooms 房间集合
      */
     Boolean addRooms(List<Room> rooms);
 
@@ -71,7 +100,7 @@ public interface DormitoryService {
     /**
      * 根据宿舍管理员用户 ID 和宿舍 ID 删除宿舍管理员
      *
-     * @param dormId 宿舍 ID
+     * @param dormId  宿舍 ID
      * @param userIds 用户 ID 集合
      */
     Boolean deleteDormAdminsByDormIdAndUserIds(Integer dormId, List<Integer> userIds);
@@ -113,4 +142,19 @@ public interface DormitoryService {
      * @param roomUser 宿舍房间用户实体类
      */
     Boolean updateRoomUsers(RoomUser roomUser);
+
+    /**
+     * 修改用户的入住宿舍
+     *
+     * @param roomId 宿舍房间 ID
+     * @param userId 用户 ID
+     */
+    Boolean updateRoomUserByRoomIdAndUserId(Integer roomId, Integer userId);
+
+    /**
+     * 判断宿舍房间是否满员
+     *
+     * @param roomId 宿舍房间 ID
+     */
+    Boolean isRoomFull(Integer roomId);
 }

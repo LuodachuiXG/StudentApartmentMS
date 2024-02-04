@@ -180,6 +180,20 @@
         WHERE da.dormitoryId = #{dormId}
     </select>
 
+    <!-- 根据管理员用户 ID 获取管理的宿舍信息 -->
+    <select id="dormsByAdmin" resultType="Dormitory">
+        SELECT d.dormitoryId,
+               d.name,
+               COALESCE(SUM(r.totalBeds), 0) AS totalBeds,
+               COUNT(DISTINCT ru.userId)     AS headCount
+        FROM dormitory d
+                 LEFT JOIN room r ON d.dormitoryId = r.dormitoryId
+                 LEFT JOIN room_user ru ON r.roomId = ru.roomId
+                 LEFT JOIN dormitory_admin da ON d.dormitoryId = da.dormitoryId
+        WHERE da.userId = #{userId}
+        GROUP BY d.dormitoryId
+    </select>
+
     <!-- 根据宿舍房间 ID 获取所有宿舍房间居住用户 -->
     <select id="roomUsersByRoomId" resultType="User">
         SELECT u.userId,
@@ -211,5 +225,18 @@
         <foreach collection="roomNames" item="roomName" open="(" separator="," close=")">
             #{roomName}
         </foreach>
+    </select>
+
+    <!-- 根据用户 ID 获取所住的宿舍信息 -->
+    <select id="roomByUserId" resultType="Room">
+        SELECT r.*
+        FROM room r
+                 LEFT JOIN room_user rs ON r.roomId = rs.roomId
+        WHERE rs.userId = #{userId}
+    </select>
+
+    <!-- 根据宿舍房间 ID 获取宿舍房间 -->
+    <select id="roomByRoomId" resultType="Room">
+        SELECT * FROM room WHERE roomId = #{roomId}
     </select>
 </mapper>

@@ -180,9 +180,32 @@ public interface DormitoryMapper {
     List<User> dormAdminByDormId(@Param("dormId") Integer dormId);
 
     /**
+     * 根据管理员用户 ID 获取管理的宿舍信息
+     *
+     * @param userId 管理员用户 ID
+     */
+    List<Dormitory> dormsByAdmin(@Param("userId") Integer userId);
+
+    /**
      * 根据宿舍房间 ID 获取所有宿舍房间居住用户
      *
      * @param roomId 房间 ID
      */
     List<User> roomUsersByRoomId(@Param("roomId") Integer roomId);
+
+    /**
+     * 根据用户 ID 获取所住的宿舍房间
+     * 仅管理员
+     *
+     * @param userId 用户 ID
+     */
+    Room roomByUserId(@Param("userId") Integer userId);
+
+    /**
+     * 根据宿舍房间 ID 获取宿舍房间
+     * 仅管理员
+     *
+     * @param roomId 宿舍房间 ID
+     */
+    Room roomByRoomId(@Param("roomId") Integer roomId);
 }

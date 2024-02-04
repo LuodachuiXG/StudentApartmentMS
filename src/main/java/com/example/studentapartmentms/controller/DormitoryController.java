@@ -145,6 +145,32 @@ public class DormitoryController {
         return dormitoryService.deleteDormAdminsByDormIdAndUserIds(dorm.getDormitoryId(), adminUserIds);
     }
 
+    /**
+     * 根据管理员用户 ID 获取管理的宿舍信息
+     * 仅管理员
+     *
+     * @param userId 管理员用户 ID
+     */
+    @GetMapping("/admin/{userId}")
+    public List<Dormitory> getDormsByAdmin(
+            HttpServletRequest request,
+            @PathVariable("userId") Integer userId
+    ) {
+        // 检查调用用户是否是管理员
+        Utils.isRole(request, RoleEnum.ADMIN);
+        return dormitoryService.dormsByAdmin(userId);
+    }
+
+    /**
+     * 根据宿舍楼 ID 获取所有管理员
+     *
+     * @param dormId 宿舍楼 ID
+     */
+    @GetMapping("/admin/dorm/{dormId}")
+    public List<User> getAdminsByDormId(@PathVariable("dormId") Integer dormId) {
+        return dormitoryService.adminsByDormId(dormId);
+    }
+
 
     /**
      * 添加宿舍房间
@@ -217,6 +243,21 @@ public class DormitoryController {
         return dormitoryService.roomsByPage(dormId, page, size);
     }
 
+    /**
+     * 根据宿舍 ID 获取所有宿舍房间
+     * 仅管理员
+     *
+     * @param dormId 宿舍 ID
+     */
+    @GetMapping("/room/{dormId}")
+    public List<Room> roomsByDormId(
+            HttpServletRequest request,
+            @PathVariable("dormId") Integer dormId
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(request, RoleEnum.ADMIN);
+        return dormitoryService.roomsByDormId(dormId);
+    }
 
 
     /**
@@ -234,6 +275,25 @@ public class DormitoryController {
         Utils.isRole(request, RoleEnum.ADMIN);
         log.info("UPDATE_ROOM_USERS: " + roomUser);
         return dormitoryService.updateRoomUsers(roomUser);
+    }
+
+    /**
+     * 修改用户的入住房间
+     * 仅管理员
+     *
+     * @param roomId 宿舍房间 ID
+     * @param userId 用户 ID
+     */
+    @PutMapping("/room/{roomId}/{userId}")
+    public Boolean updateRoomUserByRoomIdAndUserId(
+            HttpServletRequest request,
+            @PathVariable("roomId") Integer roomId,
+            @PathVariable("userId") Integer userId
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(request, RoleEnum.ADMIN);
+        log.info("UPDATE_ROOM_USER_BY_USER: roomId: " + roomId + ", userId: " + userId);
+        return dormitoryService.updateRoomUserByRoomIdAndUserId(roomId, userId);
     }
 
     /**
@@ -269,6 +329,19 @@ public class DormitoryController {
         return dormitoryService.roomUsers(roomId);
     }
 
-
-
+    /**
+     * 根据用户 ID 获取所住的宿舍信息
+     * 仅管理员
+     *
+     * @param userId 用户 ID
+     */
+    @GetMapping("/room/user/{userId}")
+    public Room roomByUserId(
+            HttpServletRequest request,
+            @PathVariable("userId") Integer userId
+    ) {
+        // 检查当前用户是否是管理员
+        Utils.isRole(request, RoleEnum.ADMIN);
+        return dormitoryService.roomByUserId(userId);
+    }
 }

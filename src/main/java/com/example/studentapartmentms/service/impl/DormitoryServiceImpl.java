@@ -41,6 +41,16 @@ public class DormitoryServiceImpl implements DormitoryService {
     }
 
     /**
+     * 根据管理员用户 ID 获取管理的宿舍信息
+     *
+     * @param userId 管理员用户 ID
+     */
+    @Override
+    public List<Dormitory> dormsByAdmin(Integer userId) {
+        return dormitoryMapper.dormsByAdmin(userId);
+    }
+
+    /**
      * 分页获取所有宿舍房间
      *
      * @param dormId 宿舍 ID
@@ -59,6 +69,27 @@ public class DormitoryServiceImpl implements DormitoryService {
             room.setUsers(users);
         });
         return Utils.getPager(list, page, size);
+    }
+
+    /**
+     * 根据宿舍 ID 获取所有宿舍房间
+     *
+     * @param dormId 宿舍 ID
+     */
+    @Override
+    public List<Room> roomsByDormId(Integer dormId) {
+        return dormitoryMapper.roomsByDormId(dormId);
+    }
+
+    /**
+     * 根据用户 ID 获取所住的宿舍信息
+     * 仅管理员
+     *
+     * @param userId 用户 ID
+     */
+    @Override
+    public Room roomByUserId(Integer userId) {
+        return dormitoryMapper.roomByUserId(userId);
     }
 
     /**
@@ -115,6 +146,16 @@ public class DormitoryServiceImpl implements DormitoryService {
     @Override
     public Boolean addDormAdmins(Integer dormId, List<Integer> userIds) {
         return dormitoryMapper.addDormAdmins(dormId, userIds) > 0;
+    }
+
+    /**
+     * 根据宿舍楼 ID 获取所有管理员
+     *
+     * @param dormId 宿舍楼 ID
+     */
+    @Override
+    public List<User> adminsByDormId(Integer dormId) {
+        return dormitoryMapper.adminsByDormitoryId(dormId);
     }
 
     /**
@@ -250,11 +291,58 @@ public class DormitoryServiceImpl implements DormitoryService {
      */
     @Override
     public Boolean updateRoomUsers(RoomUser roomUser) {
-        // 根据当前传过来的新的入住的用户，删除当前用户其他入住数据
-        dormitoryMapper.deleteRoomUsersByUserIds(roomUser.getUserIds());
-        // 删除当前宿舍所有住户
-        dormitoryMapper.deleteRoomUsersByRoomIds(List.of(roomUser.getRoomId()));
-        // 添加宿舍房间住户
-        return dormitoryMapper.addRoomUsers(roomUser) > 0;
+        if (roomUser.getUserIds() == null || roomUser.getUserIds().isEmpty()) {
+            // 传过来的用户数组为空，删除当前宿舍所有用户
+            return dormitoryMapper.deleteRoomUsersByRoomIds(List.of(roomUser.getRoomId())) > 0;
+        } else {
+            // 检查传入的用户是否大于宿舍总床位
+            Room room = dormitoryMapper.roomByRoomId(roomUser.getRoomId());
+            if (roomUser.getUserIds().size() > room.getTotalBeds()) {
+                throw new MyException("当前宿舍只能容纳最多 " + room.getTotalBeds() + " 人");
+            }
+
+            // 根据当前传过来的新的入住的用户，删除当前用户其他入住数据
+            dormitoryMapper.deleteRoomUsersByUserIds(roomUser.getUserIds());
+            // 删除当前宿舍所有住户
+            dormitoryMapper.deleteRoomUsersByRoomIds(List.of(roomUser.getRoomId()));
+            // 添加宿舍房间住户
+            return dormitoryMapper.addRoomUsers(roomUser) > 0;
+        }
+    }
+
+    /**
+     * 修改用户的入住宿舍
+     *
+     * @param roomId 宿舍房间 ID
+     * @param userId 用户 ID
+     */
+    @Override
+    public Boolean updateRoomUserByRoomIdAndUserId(Integer roomId, Integer userId) {
+        // 首先检查目标宿舍房间是否满员
+        if (isRoomFull(roomId)) {
+            throw new MyException("目标宿舍房间已经满员");
+        }
+
+        // 先删除当前用户其他入住信息
+        dormitoryMapper.deleteRoomUsersByUserIds(List.of(userId));
+        // 用户入住指定房间
+        RoomUser rs = new RoomUser();
+        rs.setRoomId(roomId);
+        rs.setUserIds(List.of(userId));
+        return dormitoryMapper.addRoomUsers(rs) > 0;
+    }
+
+    /**
+     * 判断宿舍房间是否满员
+     *
+     * @param roomId 宿舍房间 ID
+     */
+    @Override
+    public Boolean isRoomFull(Integer roomId) {
+        // 获取宿舍信息
+        Room room = dormitoryMapper.roomByRoomId(roomId);
+        // 获取当前宿舍住户
+        List<User> users = dormitoryMapper.roomUsersByRoomId(roomId);
+        return users.size() >= room.getTotalBeds();
     }
 }
