@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studentapartmentms.mapper.MessageBoardMapper">
+    <resultMap id="getMsg" type="MessageBoard">
+        <id column="messageBoardId" property="messageBoardId" />
+        <result column="dormitoryId" property="dormitoryId" />
+        <result column="userId" property="userId" />
+        <result column="content" property="content" />
+        <result column="createDate" property="createDate" />
+        <result column="top" property="top" />
+        <collection property="user" resultMap="getUser" />
+    </resultMap>
+
+    <resultMap id="getUser" type="User">
+        <id column="userId" property="userId" />
+        <result column="name" property="name" />
+        <result column="id" property="id" />
+    </resultMap>
+
+
+    <!-- 添加留言 -->
+    <insert id="addMsg">
+        INSERT INTO message_board(dormitoryId, userId, content, createDate, top)
+        VALUES (#{msgBoard.dormitoryId}, #{msgBoard.userId}, #{msgBoard.content}, #{msgBoard.createDate},
+                #{msgBoard.top})
+    </insert>
+
+    <!-- 根据留言板 ID 删除留言板 -->
+    <delete id="delMsgByMsgId">
+        DELETE FROM message_board WHERE dormitoryId = #{msgId}
+    </delete>
+
+    <!-- 获取所有留言 -->
+    <select id="allMsg" resultMap="getMsg">
+        SELECT mb.*, u.userId, u.name, u.id
+        FROM message_board mb
+                 LEFT JOIN user u ON mb.userId = u.userId
+        ORDER BY mb.top
+    </select>
+
+    <!-- 根据留言板 ID 获取留言 -->
+    <select id="msgByMsgId" resultMap="getMsg">
+        SELECT mb.*, u.userId, u.name, u.id
+        FROM message_board mb
+                 LEFT JOIN user u ON mb.userId = u.userId
+        WHERE messageBoardId = #{msgId}
+        ORDER BY mb.top
+    </select>
+
+    <!-- 根据宿舍楼 ID 集合获取宿舍楼的置顶留言 -->
+    <select id="topMsgByDormIds" resultMap="getMsg">
+        SELECT mb.*, u.userId, u.name, u.id
+        FROM message_board mb
+        LEFT JOIN user u ON mb.userId = u.userId
+        WHERE dormitoryId IN
+        <foreach collection="dormIds" item="dormId" open="(" separator="," close=")">
+            #{dormId}
+        </foreach>
+        AND top = TRUE
+    </select>
+</mapper>

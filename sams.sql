@@ -72,7 +72,6 @@ CREATE TABLE IF NOT EXISTS message_board
     userId         INT          NOT NULL COMMENT '用户 ID',
     content        VARCHAR(200) NOT NULL COMMENT '留言内容',
     createDate     DATETIME     NOT NULL COMMENT '发布时间',
-    likeCount      INT          NOT NULL COMMENT '点赞数量',
     top            BOOLEAN      NULL COMMENT '置顶',
     CONSTRAINT messageBoardId PRIMARY KEY (messageBoardId),
     CONSTRAINT dormitoryId

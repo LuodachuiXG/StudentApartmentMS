@@ -68,6 +68,12 @@ public interface DormitoryService {
     StudentRoomInfo studentRoomByUserId(Integer userId);
 
     /**
+     * 学生获取自己被分配到的宿舍楼 ID
+     * @param userId 学生用户 ID
+     */
+    Integer studentDormIdByUserId(Integer userId);
+
+    /**
      * 添加宿舍
      *
      * @param names 宿舍名集合

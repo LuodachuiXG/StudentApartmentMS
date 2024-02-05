@@ -9,10 +9,16 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 留言板实体类
+ */
 @Data
 public class MessageBoard {
     /** 留言板 ID **/
     private Integer messageBoardId;
+
+    /** 宿舍楼 ID **/
+    private Integer dormitoryId;
 
     /** 用户 ID **/
     private Integer userId;

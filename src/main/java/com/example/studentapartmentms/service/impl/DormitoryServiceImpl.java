@@ -150,6 +150,18 @@ public class DormitoryServiceImpl implements DormitoryService {
     }
 
     /**
+     * 学生获取自己被分配到的宿舍楼 ID
+     *
+     * @param userId 学生用户 ID
+     */
+    @Override
+    public Integer studentDormIdByUserId(Integer userId) {
+        // 获取学生居住的宿舍
+        Room room = dormitoryMapper.roomByUserId(userId);
+        return room.getDormitoryId();
+    }
+
+    /**
      * 添加宿舍
      *
      * @param names 宿舍名集合

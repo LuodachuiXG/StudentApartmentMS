@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 
+import javax.management.relation.Role;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -115,6 +116,20 @@ public class Utils {
     public static Integer getUserIdByRequest(HttpServletRequest request) {
         String token = request.getHeader("token");
         return getUserIdByToken(token);
+    }
+
+    /**
+     * 根据 HttpServletRequest 获取调用者用户身份
+     * @param request HttpRequest 请求
+     * @return 用户身份
+     */
+    public static RoleEnum getRoleByRequest(HttpServletRequest request) {
+        try {
+            isRole(request, RoleEnum.ADMIN);
+            return RoleEnum.ADMIN;
+        } catch (MyException e) {
+            return RoleEnum.STUDENT;
+        }
     }
 
     /**

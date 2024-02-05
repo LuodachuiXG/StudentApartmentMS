@@ -146,7 +146,7 @@ public class UserController {
 
     /**
      * 获取所有用户信息
-     * 只有管理员可以获取所有用户信息
+     * 只仅管理员
      */
     @GetMapping
     public List<User> allUser(HttpServletRequest request) {
@@ -158,7 +158,7 @@ public class UserController {
 
     /**
      * 分页获取用户信息
-     * 只有管理员可以获取所有用户信息
+     * 仅管理员
      *
      * @param page 当前页数
      * @param size 每页大小
