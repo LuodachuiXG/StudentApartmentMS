@@ -4,19 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.studentapartmentms.mapper.MessageBoardMapper">
     <resultMap id="getMsg" type="MessageBoard">
-        <id column="messageBoardId" property="messageBoardId" />
-        <result column="dormitoryId" property="dormitoryId" />
-        <result column="userId" property="userId" />
-        <result column="content" property="content" />
-        <result column="createDate" property="createDate" />
-        <result column="top" property="top" />
-        <collection property="user" resultMap="getUser" />
-    </resultMap>
-
-    <resultMap id="getUser" type="User">
-        <id column="userId" property="userId" />
-        <result column="name" property="name" />
-        <result column="id" property="id" />
+        <id column="messageBoardId" property="messageBoardId"/>
+        <result column="dormitoryId" property="dormitoryId"/>
+        <result column="userId" property="userId"/>
+        <result column="content" property="content"/>
+        <result column="createDate" property="createDate"/>
+        <result column="top" property="top"/>
+        <association property="user" javaType="User">
+            <id property="userId" column="uuId" />
+            <result property="name" column="uName" />
+            <result property="id" column="uId" />
+        </association>
     </resultMap>
 
 
@@ -29,24 +27,36 @@
 
     <!-- 根据留言板 ID 删除留言板 -->
     <delete id="delMsgByMsgId">
-        DELETE FROM message_board WHERE dormitoryId = #{msgId}
+        DELETE
+        FROM message_board
+        WHERE dormitoryId = #{msgId}
     </delete>
+
+    <sql id="getMsg">
+        SELECT mb.*, u.userId uuId, u.name uName, u.id uId
+        FROM message_board mb
+                 LEFT JOIN user u ON mb.userId = u.userId
+    </sql>
+
 
     <!-- 获取所有留言 -->
     <select id="allMsg" resultMap="getMsg">
-        SELECT mb.*, u.userId, u.name, u.id
-        FROM message_board mb
-                 LEFT JOIN user u ON mb.userId = u.userId
-        ORDER BY mb.top
+        <include refid="getMsg"/>
+        ORDER BY mb.top DESC
     </select>
 
     <!-- 根据留言板 ID 获取留言 -->
     <select id="msgByMsgId" resultMap="getMsg">
-        SELECT mb.*, u.userId, u.name, u.id
-        FROM message_board mb
-                 LEFT JOIN user u ON mb.userId = u.userId
+        <include refid="getMsg"/>
         WHERE messageBoardId = #{msgId}
-        ORDER BY mb.top
+        ORDER BY mb.top DESC
+    </select>
+
+    <!-- 根据宿舍楼 ID 获取留言 -->
+    <select id="msgByDormId" resultMap="getMsg">
+        <include refid="getMsg"/>
+        WHERE dormitoryId = #{dormId}
+        ORDER BY mb.top DESC
     </select>
 
     <!-- 根据宿舍楼 ID 集合获取宿舍楼的置顶留言 -->

@@ -5,12 +5,9 @@ import com.example.studentapartmentms.expcetion.MyException;
 import com.example.studentapartmentms.pojo.MessageBoard;
 import com.example.studentapartmentms.pojo.Pager;
 import com.example.studentapartmentms.pojo.RoleEnum;
-import com.example.studentapartmentms.pojo.User;
 import com.example.studentapartmentms.service.MessageBoardService;
-import com.example.studentapartmentms.service.impl.MessageBoardServiceImpl;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,22 +68,23 @@ public class MessageBoardController {
     }
 
     /**
-     * 分页获取留言
+     * 分页获取指定宿舍楼留言
      * 仅管理员
-     *
+     * @param dormId 宿舍楼 ID
      * @param page 当前页数
      * @param size 每页大小
      */
-    @GetMapping("/{page}/{size}")
+    @GetMapping("/{dormId}/{page}/{size}")
     public Pager<MessageBoard> msgByPage(
             HttpServletRequest request,
+            @PathVariable("dormId") Integer dormId,
             @PathVariable("page") Integer page,
             @PathVariable("size") Integer size
     ) {
         // 检查当前用户是否是管理员
         Utils.isRole(request, RoleEnum.ADMIN);
         // 返回留言
-        return messageBoardService.msgByPage(page, size);
+        return messageBoardService.msgByPage(dormId, page, size);
     }
 
     /**

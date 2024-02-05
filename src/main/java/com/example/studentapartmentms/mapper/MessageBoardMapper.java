@@ -40,6 +40,12 @@ public interface MessageBoardMapper {
     MessageBoard msgByMsgId(@Param("msgId") Integer msgId);
 
     /**
+     * 根据宿舍楼 ID 获取留言
+     * @param dormId 宿舍楼 ID
+     */
+    List<MessageBoard> msgByDormId(@Param("dormId") Integer dormId);
+
+    /**
      * 根据宿舍楼 ID 集合获取宿舍楼的置顶留言
      * @param dormIds 宿舍楼 ID 集合
      */

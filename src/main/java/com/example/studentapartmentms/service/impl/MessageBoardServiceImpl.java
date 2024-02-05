@@ -70,17 +70,18 @@ public class MessageBoardServiceImpl implements MessageBoardService {
     }
 
     /**
-     * 分页获取留言
-     *
-     * @param page 当前页
-     * @param size 每页条数
+     * 分页获取指定宿舍楼留言
+     * 仅管理员
+     * @param dormId 宿舍楼 ID
+     * @param page 当前页数
+     * @param size 每页大小
      */
     @Override
-    public Pager<MessageBoard> msgByPage(Integer page, Integer size) {
+    public Pager<MessageBoard> msgByPage(Integer dormId, Integer page, Integer size) {
         // 开始分页查询，执行此代码之后的 SQL 会被自动加上分页的代码
         PageHelper.startPage(page, size);
         // 此处的获取所有留言的 SQL 已经被加上了分页代码
-        List<MessageBoard> list = allMsg();
+        List<MessageBoard> list = messageBoardMapper.msgByDormId(dormId);
         return Utils.getPager(list, page, size);
     }
 

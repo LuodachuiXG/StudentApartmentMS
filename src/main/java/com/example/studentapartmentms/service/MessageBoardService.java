@@ -35,12 +35,13 @@ public interface MessageBoardService {
     Boolean delMsg(Integer userId, Integer msgId, RoleEnum role);
 
     /**
-     * 分页获取留言
-     *
-     * @param page 当前页
-     * @param size 每页条数
+     * 分页获取指定宿舍楼留言
+     * 仅管理员
+     * @param dormId 宿舍楼 ID
+     * @param page 当前页数
+     * @param size 每页大小
      */
-    Pager<MessageBoard> msgByPage(Integer page, Integer size);
+    Pager<MessageBoard> msgByPage(Integer dormId, Integer page, Integer size);
 
     /**
      * 根据用户 ID 获取宿舍楼置顶留言

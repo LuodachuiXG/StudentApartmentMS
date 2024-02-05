@@ -32,9 +32,6 @@ public class MessageBoard {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createDate;
 
-    /** 点赞数 **/
-    private Integer likeCount;
-
     /** 置顶 **/
     private Boolean top;
 
