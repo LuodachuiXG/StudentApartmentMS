@@ -14,6 +14,7 @@
             <id property="userId" column="uuId" />
             <result property="name" column="uName" />
             <result property="id" column="uId" />
+            <result property="role" column="uRole" />
         </association>
     </resultMap>
 
@@ -29,11 +30,11 @@
     <delete id="delMsgByMsgId">
         DELETE
         FROM message_board
-        WHERE dormitoryId = #{msgId}
+        WHERE messageBoardId = #{msgId}
     </delete>
 
     <sql id="getMsg">
-        SELECT mb.*, u.userId uuId, u.name uName, u.id uId
+        SELECT mb.*, u.userId uuId, u.name uName, u.id uId, u.role uRole
         FROM message_board mb
                  LEFT JOIN user u ON mb.userId = u.userId
     </sql>

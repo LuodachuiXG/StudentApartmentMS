@@ -8,6 +8,7 @@ import com.example.studentapartmentms.pojo.RoleEnum;
 import com.example.studentapartmentms.service.MessageBoardService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/msg")
 @ResponseBody
+@Slf4j
 public class MessageBoardController {
 
     @Resource
@@ -45,6 +47,7 @@ public class MessageBoardController {
                 throw new MyException("非管理员不能设置留言置顶");
             }
         }
+        log.info("ADD_MSG: " + messageBoard);
         return messageBoardService.addMsg(messageBoard);
     }
 
@@ -63,7 +66,7 @@ public class MessageBoardController {
         Integer userId = Utils.getUserIdByRequest(request);
         // 判断当前用户是否是管理员
         RoleEnum role = Utils.getRoleByRequest(request);
-
+        log.info("DEL_MSG: " + msgId);
         return messageBoardService.delMsg(userId, msgId, role);
     }
 
