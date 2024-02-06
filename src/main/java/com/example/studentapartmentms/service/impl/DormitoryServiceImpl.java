@@ -137,6 +137,7 @@ public class DormitoryServiceImpl implements DormitoryService {
             // 删除自己
             roomUsers.removeIf(user -> user.getUserId().equals(userId));
 
+            sri.setDormId(room.getDormitoryId());
             sri.setRoomName(room.getName());
             sri.setAdmins(admins);
             sri.setDormName(dormName);

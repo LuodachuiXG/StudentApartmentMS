@@ -11,6 +11,8 @@ import java.util.List;
 public class StudentRoomInfo {
     /** 宿舍楼名 **/
     private String dormName;
+    /** 宿舍楼 ID **/
+    private Integer dormId;
     /** 房间名 **/
     private String roomName;
     /** 房间总床位 **/

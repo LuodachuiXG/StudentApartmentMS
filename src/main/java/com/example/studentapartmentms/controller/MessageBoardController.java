@@ -72,10 +72,10 @@ public class MessageBoardController {
 
     /**
      * 分页获取指定宿舍楼留言
-     * 仅管理员
+     *
      * @param dormId 宿舍楼 ID
-     * @param page 当前页数
-     * @param size 每页大小
+     * @param page   当前页数
+     * @param size   每页大小
      */
     @GetMapping("/{dormId}/{page}/{size}")
     public Pager<MessageBoard> msgByPage(
@@ -84,8 +84,6 @@ public class MessageBoardController {
             @PathVariable("page") Integer page,
             @PathVariable("size") Integer size
     ) {
-        // 检查当前用户是否是管理员
-        Utils.isRole(request, RoleEnum.ADMIN);
         // 返回留言
         return messageBoardService.msgByPage(dormId, page, size);
     }
